@@ -1,0 +1,228 @@
+/* --- Layout helpers --- */
+.lead {
+  font-size: 1.125rem;
+  opacity: 0.9;
+}
+
+.muted {
+  opacity: 0.75;
+  margin-top: 0.75rem;
+}
+
+/* --- Hero --- */
+.hero {
+  margin-top: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.hero__inner {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.hero__actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.hero__placeholder {
+  aspect-ratio: 4 / 3;
+  border-radius: var(--pico-border-radius);
+  border: 1px solid rgba(0,0,0,0.12);
+  background: rgba(0,0,0,0.04);
+}
+
+/* --- Cards --- */
+.home-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin: 2rem 0;
+}
+
+.card {
+  border: 1px solid rgba(0,0,0,0.12);
+  border-radius: var(--pico-border-radius);
+  padding: 1rem;
+  background: rgba(255,255,255,0.6);
+}
+
+.card__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.card__header a {
+  font-size: 0.95rem;
+  text-decoration: none;
+}
+
+/* --- List --- */
+.list {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.list__item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: calc(var(--pico-border-radius) - 0.2rem);
+  border: 1px solid rgba(0,0,0,0.10);
+  text-decoration: none;
+}
+
+.list__item:hover {
+  border-color: rgba(0,0,0,0.18);
+}
+
+.list__item--static {
+  cursor: default;
+}
+
+.list__title {
+  font-weight: 600;
+}
+
+.list__meta {
+  opacity: 0.7;
+  white-space: nowrap;
+}
+
+/* --- Badges --- */
+.badges {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.badge {
+  border: 1px solid rgba(0,0,0,0.12);
+  border-radius: var(--pico-border-radius);
+  padding: 1rem;
+}
+
+.badge span {
+  display: block;
+  opacity: 0.75;
+  margin-top: 0.25rem;
+}
+
+/* --- Sponsors --- */
+.sponsors {
+  margin: 2.5rem 0 1rem;
+}
+
+.sponsors__grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.sponsor {
+  aspect-ratio: 3 / 1;
+  border-radius: calc(var(--pico-border-radius) - 0.2rem);
+  border: 1px solid rgba(0,0,0,0.12);
+  background: rgba(0,0,0,0.03);
+}
+
+/* --- Mobile --- */
+@media (max-width: 900px) {
+  .hero__inner {
+    grid-template-columns: 1fr;
+  }
+  .home-grid {
+    grid-template-columns: 1fr;
+  }
+  .badges {
+    grid-template-columns: 1fr;
+  }
+  .sponsors__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+/* Farger/overflater som funker i både lys og mørk */
+:root{
+  --surface-1: rgba(255,255,255,0.7);
+  --surface-2: rgba(255,255,255,0.9);
+  --border-1: rgba(0,0,0,0.12);
+  --muted: rgba(0,0,0,0.7);
+}
+
+/* Når systemet er i dark mode */
+@media (prefers-color-scheme: dark) {
+  :root{
+    --surface-1: rgba(255,255,255,0.06);
+    --surface-2: rgba(255,255,255,0.10);
+    --border-1: rgba(255,255,255,0.14);
+    --muted: rgba(255,255,255,0.72);
+  }
+}
+
+.lead { font-size: 1.125rem; opacity: 0.9; }
+.muted { color: var(--muted); }
+
+/* Hero som stort kort */
+.hero-card{
+  margin-top: 1.5rem;
+  margin-bottom: 2rem;
+  border: 1px solid var(--border-1);
+  border-radius: calc(var(--pico-border-radius) + 0.25rem);
+  background: var(--surface-1);
+  overflow: hidden;
+}
+
+.hero-card__grid{
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  align-items: stretch;
+}
+
+.hero-card__text{
+  padding: 1.25rem;
+}
+
+.hero-card__media{
+  min-height: 220px;
+  border-left: 1px solid var(--border-1);
+  background:
+    linear-gradient(135deg, rgba(0,0,0,0.10), rgba(0,0,0,0.00)),
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,0.18), rgba(255,255,255,0.00)),
+    rgba(0,0,0,0.06);
+}
+
+/* Mobile */
+@media (max-width: 900px) {
+  .hero-card__grid{ grid-template-columns: 1fr; }
+  .hero-card__media{
+    border-left: 0;
+    border-top: 1px solid var(--border-1);
+    min-height: 180px;
+  }
+}
+.actions{
+  display:flex;
+  gap:.75rem;
+  flex-wrap:wrap;
+  margin-top:1rem;
+}
+
+.theme-toggle{
+  border: 1px solid var(--border-1);
+  border-radius: 999px;
+  padding: .35rem .55rem;
+  background: var(--surface-1);
+}
+.theme-toggle:hover{
+  background: var(--surface-2);
+}

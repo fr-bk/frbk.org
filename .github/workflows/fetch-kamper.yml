@@ -1,0 +1,35 @@
+name: Fetch matches (ICS -> JSON)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 3 * * *" # ca 04:17 norsk tid vinter
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Fetch & generate JSON
+        env:
+          ICS_URL: "https://www.fotball.no/footballapi/Calendar/GetCalendarForClub?clubId=1064"
+        run: node scripts/fetch-kamper.mjs
+
+      - name: Commit if changed
+        run: |
+          git config user.name "frbk-bot"
+          git config user.email "frbk-bot@users.noreply.github.com"
+          git add data/kamper.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Update matches data"
+          git push

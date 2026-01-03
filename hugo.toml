@@ -1,3 +1,11 @@
-baseURL = 'https://example.org/'
-languageCode = 'en-us'
-title = 'My New Hugo Site'
+baseURL = "https://frbk.org/"
+languageCode = "nb-no"
+title = "Fiksdal/Rekdal ballklubb"
+
+[params]
+description = "Fotballglede for alle sidan 1979"
+enableMatches = true
+matchesJsonPath = "kamper.json"
+
+matchesIcsUrl = "https://www.fotball.no/footballapi/Calendar/GetCalendarForClub?clubId=1064"
+matchesFotballUrl = "https://www.fotball.no/fotballdata/klubb/hjem/?fiksId=1064&underside=kamper"
