@@ -15,11 +15,26 @@
 </head>
 <body>
 
-  {{ partial "header.html" . }}
-
-  <main class="container">
-    {{ block "main" . }}{{ end }}
-  </main>
+  {{ $mastheadImage := .Params.heroImage | default "/img/hero-fotballbane.jpg" }}
+  {{ $mastheadPosition := .Params.heroPosition | default "center" }}
+  {{ if .IsHome }}
+    <section class="masthead masthead--hero" style="--masthead-image: url('{{ $mastheadImage }}'); --masthead-position: {{ $mastheadPosition }};">
+      {{ partial "header.html" . }}
+      <div class="container masthead__content">
+        {{ block "hero" . }}{{ end }}
+      </div>
+    </section>
+    <main class="container">
+      {{ block "main" . }}{{ end }}
+    </main>
+  {{ else }}
+    <section class="masthead" style="--masthead-image: url('{{ $mastheadImage }}'); --masthead-position: {{ $mastheadPosition }};">
+      {{ partial "header.html" . }}
+    </section>
+    <main class="container">
+      {{ block "main" . }}{{ end }}
+    </main>
+  {{ end }}
 
   {{ partial "footer.html" . }}
 

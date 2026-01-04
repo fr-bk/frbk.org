@@ -1,18 +1,31 @@
 <header class="container">
-  <nav>
-    <ul>
-      <li><strong>{{ .Site.Title }}</strong></li>
+  <nav class="site-nav" aria-label="Hovedmeny">
+    <ul class="nav-brand">
+      <li><strong><a class="site-logo-link" href="/" aria-label="Hjem"><img class="site-logo" src="/img/FRBK.svg" alt="FRBK logo"></a></strong></li>
     </ul>
-    <ul>
+    <button class="menu-toggle" type="button" aria-label="Meny" aria-expanded="false" aria-controls="site-nav-links">
+      <span class="menu-toggle__bar"></span>
+      <span class="menu-toggle__bar"></span>
+      <span class="menu-toggle__bar"></span>
+    </button>
+    <ul id="site-nav-links" class="nav-links">
       <li><a href="/">Hjem</a></li>
       <li><a href="/nyheter/">Nyheter</a></li>
+      <li><a href="/om-klubben/">Om klubben</a></li>
+      <li><a href="/fair-play/">Fair Play</a></li>
+      <li><a href="/dokumenter/">Dokumenter</a></li>
       <li><a href="/kontakt/">Kontakt</a></li>
       <li>
-  <button class="theme-toggle" type="button" aria-label="Bytt tema" title="Bytt tema">
-    🌓
-  </button>
-</li>
-
+        <button class="theme-toggle" type="button" aria-label="Bytt tema" title="Bytt tema">
+          <svg class="theme-icon theme-icon--sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <circle cx="12" cy="12" r="4.5"></circle>
+            <path d="M12 2.5v2.5M12 19v2.5M4.5 12H2M22 12h-2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"></path>
+          </svg>
+          <svg class="theme-icon theme-icon--moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M20.5 15.6a8.5 8.5 0 1 1-8.1-12 7 7 0 1 0 8.1 12z"></path>
+          </svg>
+        </button>
+      </li>
     </ul>
   </nav>
 </header>

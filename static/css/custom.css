@@ -1,190 +1,478 @@
-/* --- Layout helpers --- */
-.lead {
-  font-size: 1.125rem;
+/* =========================================================
+   FRBK – Custom CSS (+ Pico)
+   - Light/Dark
+   - Hero, kort, liste, knapper, nav, fokus
+   - By Chris Rørvik 2026
+   ========================================================= */
+
+/* ---------- Brand (juster disse) ---------- */
+:root{
+  /* Klubbfarge (primær) – juster om du vil */
+  --brand: #0b5ed7;
+
+  /* En varm sekundærfarge */
+  --brand-warm: #e25b2a;
+
+  /* Radius og skygger */
+  --radius: 16px;
+  --radius-sm: 12px;
+  --shadow: 0 12px 30px rgba(0,0,0,0.10);
+  --shadow-soft: 0 10px 24px rgba(0,0,0,0.08);
+}
+
+/* ---------- Theme: DEFAULT = system lys ---------- */
+:root{
+  --bg: #fbfbfc;
+  --surface: rgba(255,255,255,0.86);
+  --surface-2: rgba(255,255,255,0.96);
+  --text: rgba(10,13,18,0.92);
+  --muted: rgba(10,13,18,0.68);
+  --border: rgba(10,13,18,0.12);
+
+  --link: var(--brand);
+  --focus: rgba(11,94,215,0.35);
+
+  --hero-media-bg:
+    linear-gradient(135deg, rgba(10,13,18,0.10), rgba(10,13,18,0.00)),
+    radial-gradient(circle at 30% 25%, rgba(255,255,255,0.35), rgba(255,255,255,0.00)),
+    rgba(10,13,18,0.05);
+}
+
+/* System mørk fallback */
+@media (prefers-color-scheme: dark) {
+  :root{
+    --bg: #0b0f16;
+    --surface: rgba(255,255,255,0.06);
+    --surface-2: rgba(255,255,255,0.10);
+    --text: rgba(255,255,255,0.92);
+    --muted: rgba(255,255,255,0.72);
+    --border: rgba(255,255,255,0.14);
+
+    --focus: rgba(11,94,215,0.45);
+
+    --hero-media-bg:
+      linear-gradient(135deg, rgba(0,0,0,0.55), rgba(0,0,0,0.05)),
+      radial-gradient(circle at 30% 25%, rgba(255,255,255,0.18), rgba(255,255,255,0.00)),
+      rgba(255,255,255,0.05);
+  }
+}
+
+/* Manual overstyring via knapp */
+:root[data-theme="light"]{
+  --bg: #fbfbfc;
+  --surface: rgba(255,255,255,0.86);
+  --surface-2: rgba(255,255,255,0.96);
+  --text: rgba(10,13,18,0.92);
+  --muted: rgba(10,13,18,0.68);
+  --border: rgba(10,13,18,0.12);
+  --focus: rgba(11,94,215,0.35);
+
+  --hero-media-bg:
+    linear-gradient(135deg, rgba(10,13,18,0.10), rgba(10,13,18,0.00)),
+    radial-gradient(circle at 30% 25%, rgba(255,255,255,0.35), rgba(255,255,255,0.00)),
+    rgba(10,13,18,0.05);
+}
+
+:root[data-theme="dark"]{
+  --bg: #0b0f16;
+  --surface: rgba(255,255,255,0.06);
+  --surface-2: rgba(255,255,255,0.10);
+  --text: rgba(255,255,255,0.92);
+  --muted: rgba(255,255,255,0.72);
+  --border: rgba(255,255,255,0.14);
+  --focus: rgba(11,94,215,0.45);
+
+  --hero-media-bg:
+    linear-gradient(135deg, rgba(0,0,0,0.55), rgba(0,0,0,0.05)),
+    radial-gradient(circle at 30% 25%, rgba(255,255,255,0.18), rgba(255,255,255,0.00)),
+    rgba(255,255,255,0.05);
+}
+
+/* ---------- Pico variabler mapping---------- */
+:root{
+  --pico-primary: var(--brand);
+  --pico-border-radius: var(--radius);
+}
+
+/* ---------- Globale verdier--------- */
+html, body{
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* Unngå layout-hopp når scrollbar dukker opp/forsvinner */
+html{
+  scrollbar-gutter: stable;
+}
+
+main.container{
+  padding-top: 0.5rem;
+  padding-bottom: 2rem;
+}
+
+/* Linker */
+a{
+  color: var(--link);
+  text-underline-offset: 0.15em;
+}
+a:hover{
   opacity: 0.9;
 }
 
-.muted {
-  opacity: 0.75;
-  margin-top: 0.75rem;
+/* Fokus */
+:where(a, button, input, textarea, select):focus-visible{
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 10px;
 }
 
-/* --- Hero --- */
-.hero {
-  margin-top: 1.5rem;
-  margin-bottom: 2rem;
+/* ---------- Header / nav ---------- */
+header.container{
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
-.hero__inner {
-  display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
-  gap: 1.5rem;
+header nav{
+  border: 0;
+  background: transparent;
+  border-radius: 0;
+  padding: 0.25rem 0;
+  box-shadow: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+header nav a{
+  text-decoration: none;
+}
+
+header nav strong{
+  letter-spacing: 0.2px;
+}
+
+header nav ul{
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+.site-logo{
+  height: 4.25rem;
+  width: auto;
+  display: block;
+}
+
+.nav-links{
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.nav-brand{
+  display: flex;
   align-items: center;
 }
 
-.hero__actions {
-  display: flex;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-  margin-top: 1rem;
+.site-logo-link{
+  display: inline-flex;
+  align-items: center;
 }
 
-.hero__placeholder {
-  aspect-ratio: 4 / 3;
-  border-radius: var(--pico-border-radius);
-  border: 1px solid rgba(0,0,0,0.12);
-  background: rgba(0,0,0,0.04);
+.menu-toggle{
+  border: 0;
+  background: transparent;
+  padding: 0.35rem;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  flex-direction: column;
+  cursor: pointer;
 }
 
-/* --- Cards --- */
-.home-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.25rem;
-  margin: 2rem 0;
+.menu-toggle__bar{
+  width: 22px;
+  height: 2px;
+  border-radius: 999px;
+  background: currentColor;
+  display: block;
+  transition: transform 200ms ease, opacity 200ms ease;
 }
 
-.card {
-  border: 1px solid rgba(0,0,0,0.12);
-  border-radius: var(--pico-border-radius);
+.site-nav.is-open .menu-toggle__bar:nth-child(1){
+  transform: translateY(6px) rotate(45deg);
+}
+.site-nav.is-open .menu-toggle__bar:nth-child(2){
+  opacity: 0;
+}
+.site-nav.is-open .menu-toggle__bar:nth-child(3){
+  transform: translateY(-6px) rotate(-45deg);
+}
+
+/* Theme bryter */
+.theme-toggle{
+  border: 0;
+  border-radius: 999px;
+  padding: .35rem .55rem;
+  background: transparent;
+  cursor: pointer;
+  line-height: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.theme-toggle:hover{
+  background: rgba(255,255,255,0.12);
+}
+
+.theme-toggle:focus-visible{
+  outline: none !important;
+  box-shadow: none !important;
+}
+.theme-toggle:focus{
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.theme-icon{
+  width: 1.1rem;
+  height: 1.1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  transition: transform 220ms ease, opacity 220ms ease;
+}
+
+.theme-icon--sun{
+  color: rgba(255,219,88,0.85);
+}
+
+.theme-icon--moon{
+  color: rgba(230,238,255,0.9);
+}
+
+.theme-icon--moon{
+  position: absolute;
+  opacity: 0;
+  transform: translateY(2px) scale(0.9);
+}
+
+:root[data-theme="dark"] .theme-icon--sun{
+  opacity: 0;
+  transform: rotate(-35deg) scale(0.85);
+}
+
+:root[data-theme="dark"] .theme-icon--moon{
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme]) .theme-icon--sun{
+    opacity: 0;
+    transform: rotate(-35deg) scale(0.85);
+  }
+  :root:not([data-theme]) .theme-icon--moon{
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.theme-toggle.is-toggling .theme-icon--sun{
+  animation: spin-sun 520ms ease;
+}
+
+.theme-toggle.is-toggling .theme-icon--moon{
+  animation: sway-moon 520ms ease;
+}
+
+@keyframes spin-sun{
+  0%{ transform: rotate(0deg); }
+  100%{ transform: rotate(180deg); }
+}
+
+@keyframes sway-moon{
+  0%{ transform: translateY(0) rotate(0deg); }
+  50%{ transform: translateY(-2px) rotate(-10deg); }
+  100%{ transform: translateY(0) rotate(0deg); }
+}
+
+/* ---------- Husker ikke >_< ---------- */
+.lead{
+  font-size: 1.125rem;
+  color: var(--muted);
+}
+
+.muted{
+  color: var(--muted);
+}
+
+/* ---------- Knapper (Pico role="button") ---------- */
+a[role="button"], button{
+  border-radius: 999px;
+}
+
+/* Secondary knapper bedre kontrast */
+a[role="button"].secondary{
+  background: transparent !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border) !important;
+}
+a[role="button"].secondary:hover{
+  background: var(--surface) !important;
+}
+
+/* ---------- Kort ---------- */
+.card{
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
   padding: 1rem;
-  background: rgba(255,255,255,0.6);
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
 }
 
-.card__header {
-  display: flex;
+.card__header{
+  display:flex;
   align-items: baseline;
   justify-content: space-between;
   gap: 1rem;
   margin-bottom: 0.75rem;
 }
 
-.card__header a {
+.card__header a{
   font-size: 0.95rem;
-  text-decoration: none;
+  opacity: 0.9;
 }
 
-/* --- List --- */
-.list {
-  display: grid;
+/* ---------- Hjem grid (nyheter + kamper) ---------- */
+.home-grid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin: 1.75rem 0 2rem;
+}
+
+/* ---------- List items ---------- */
+.list{
+  display:grid;
   gap: 0.5rem;
 }
 
-.list__item {
-  display: grid;
+.list__item{
+  display:grid;
   grid-template-columns: 1fr auto;
   gap: 0.75rem;
-  padding: 0.6rem 0.75rem;
-  border-radius: calc(var(--pico-border-radius) - 0.2rem);
-  border: 1px solid rgba(0,0,0,0.10);
+  padding: 0.65rem 0.75rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface-2);
   text-decoration: none;
 }
 
-.list__item:hover {
-  border-color: rgba(0,0,0,0.18);
+.list__item:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 10px 18px rgba(0,0,0,0.08);
 }
 
-.list__item--static {
+:root[data-theme="dark"] .list__item:hover{
+  box-shadow: 0 12px 20px rgba(0,0,0,0.35);
+}
+
+.list__item--static{
   cursor: default;
 }
 
-.list__title {
-  font-weight: 600;
+.list__title{
+  font-weight: 650;
+  color: var(--text);
 }
 
-.list__meta {
-  opacity: 0.7;
+.list__meta{
+  color: var(--muted);
   white-space: nowrap;
 }
 
-/* --- Badges --- */
-.badges {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-  margin: 2rem 0;
+/* Knapper under kampkortet */
+.actions{
+  display:flex;
+  gap:.75rem;
+  flex-wrap:wrap;
+  margin-top: 1rem;
 }
 
-.badge {
-  border: 1px solid rgba(0,0,0,0.12);
-  border-radius: var(--pico-border-radius);
-  padding: 1rem;
+/* ---------- Masthead (bakgrunn bak nav + hero) ---------- */
+.masthead{
+  background-image:
+    linear-gradient(180deg, rgba(9,13,20,0.72), rgba(9,13,20,0.45)),
+    var(--masthead-image, url("/img/hero-fotballbane.jpg"));
+  background-position: center, var(--masthead-position, center);
+  background-size: cover, cover;
+  background-repeat: no-repeat, no-repeat;
+  padding: 0.75rem 0 1.25rem;
+  margin-bottom: 1rem;
+  color: rgba(255,255,255,0.96);
+  --text: rgba(255,255,255,0.96);
+  --muted: rgba(255,255,255,0.78);
+  --border: rgba(255,255,255,0.22);
+  --surface: rgba(9,12,18,0.30);
+  --surface-2: rgba(9,12,18,0.45);
+  --link: rgba(255,255,255,0.96);
+  --focus: rgba(255,255,255,0.45);
 }
 
-.badge span {
-  display: block;
-  opacity: 0.75;
-  margin-top: 0.25rem;
+.masthead--hero{
+  padding-bottom: 2.5rem;
 }
 
-/* --- Sponsors --- */
-.sponsors {
-  margin: 2.5rem 0 1rem;
+.masthead__content{
+  padding-top: 1.25rem;
 }
 
-.sponsors__grid {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 0.75rem;
-  margin-top: 0.75rem;
+.masthead header nav a{
+  color: var(--text);
 }
 
-.sponsor {
-  aspect-ratio: 3 / 1;
-  border-radius: calc(var(--pico-border-radius) - 0.2rem);
-  border: 1px solid rgba(0,0,0,0.12);
-  background: rgba(0,0,0,0.03);
+
+.masthead h1,
+.masthead p,
+.masthead a{
+  text-shadow: 0 2px 10px rgba(0,0,0,0.35);
 }
 
-/* --- Mobile --- */
-@media (max-width: 900px) {
-  .hero__inner {
-    grid-template-columns: 1fr;
-  }
-  .home-grid {
-    grid-template-columns: 1fr;
-  }
-  .badges {
-    grid-template-columns: 1fr;
-  }
-  .sponsors__grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-/* Farger/overflater som funker i både lys og mørk */
-:root{
-  --surface-1: rgba(255,255,255,0.7);
-  --surface-2: rgba(255,255,255,0.9);
-  --border-1: rgba(0,0,0,0.12);
-  --muted: rgba(0,0,0,0.7);
+.masthead .hero-card__text,
+.masthead .hero-card__text h1,
+.masthead .hero-card__text p{
+  color: rgba(255,255,255,0.96);
 }
 
-/* Når systemet er i dark mode */
-@media (prefers-color-scheme: dark) {
-  :root{
-    --surface-1: rgba(255,255,255,0.06);
-    --surface-2: rgba(255,255,255,0.10);
-    --border-1: rgba(255,255,255,0.14);
-    --muted: rgba(255,255,255,0.72);
-  }
+.masthead .hero-card{
+  background: transparent;
+  border: 0;
+  box-shadow: none;
 }
 
-.lead { font-size: 1.125rem; opacity: 0.9; }
-.muted { color: var(--muted); }
 
-/* Hero som stort kort */
+.hero-card__grid--single{
+  grid-template-columns: 1fr;
+}
+
+.hero-card--overlay .hero-card__text{
+  padding: 1.75rem 1.5rem;
+}
+
 .hero-card{
-  margin-top: 1.5rem;
-  margin-bottom: 2rem;
-  border: 1px solid var(--border-1);
-  border-radius: calc(var(--pico-border-radius) + 0.25rem);
-  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius) + 8px);
+  background: var(--surface);
+  box-shadow: var(--shadow);
   overflow: hidden;
 }
 
 .hero-card__grid{
-  display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
+  display:grid;
+  grid-template-columns: 1.25fr 0.75fr;
   align-items: stretch;
 }
 
@@ -192,37 +480,238 @@
   padding: 1.25rem;
 }
 
-.hero-card__media{
-  min-height: 220px;
-  border-left: 1px solid var(--border-1);
-  background:
-    linear-gradient(135deg, rgba(0,0,0,0.10), rgba(0,0,0,0.00)),
-    radial-gradient(circle at 30% 30%, rgba(255,255,255,0.18), rgba(255,255,255,0.00)),
-    rgba(0,0,0,0.06);
+.hero__actions{
+  display:flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
 }
 
-/* Mobile */
-@media (max-width: 900px) {
+/* Høyre side media området */
+.hero-card__media{
+  min-height: 240px;
+  border-left: 1px solid var(--border);
+  background: var(--hero-media-bg);
+}
+
+/* Om jeg senere bytter til en <img>, vil det fortsatt se bra ut */
+.hero-card__media img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display:block;
+}
+
+/* ---------- "Badges" seksjon ---------- */
+.badges{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.badge{
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  background: var(--surface);
+}
+
+.badge span{
+  display:block;
+  color: var(--muted);
+  margin-top: 0.25rem;
+}
+
+.badge:first-child{
+  position: relative;
+  overflow: hidden;
+}
+.badge:first-child::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:0;
+  bottom:0;
+  width: 6px;
+  background: linear-gradient(180deg, var(--brand), var(--brand-warm));
+  opacity: 0.85;
+}
+
+/* ---------- Sponsorer ---------- */
+.sponsors{
+  /* egen linje under badges */
+  margin: 3rem 0 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+/* sørg for at overskrifter over seksjonene ikke presser innholdet ulikt */
+.badges > h2,
+.badges h3{
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+.sponsors > h2,
+.sponsors h3{
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  line-height: 1.1;
+}
+
+.sponsors__grid{
+  display:grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+  align-items: center;
+}
+
+.sponsor,
+.sponsor-card{
+  aspect-ratio: 3 / 1;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  /* svak fargetone for bedre kontrast mot mørke logoer */
+  background:
+    linear-gradient(90deg, rgba(11,94,215,0.06), rgba(226,91,42,0.03)),
+    var(--surface);
+  padding: 0.5rem;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow: hidden;
+}
+
+.sponsor img,
+.sponsor-card img{
+  /* gjør alle logoer konsekvente, behold proporsjoner og sentrer */
+  max-height: 140px;
+  max-width: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display:block;
+  margin: 0 auto;
+}
+
+/* ---------- Footer ---------- */
+footer.container{
+  margin-top: 3rem;
+  opacity: 0.85;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.footer-meta{
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.footer-logo{
+  height: 2em;
+  width: auto;
+}
+
+.footer-tagline{
+  white-space: nowrap;
+}
+
+/* ---------- Mobil ---------- */
+@media (max-width: 1280px){
+  .sponsor img, .sponsor-card img{ max-height: 5rem; }
+}
+@media (max-width: 900px){
+  header nav{
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  .menu-toggle{
+    display: inline-flex;
+  }
+  .nav-links{
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    flex-basis: 100%;
+    padding-bottom: 0.5rem;
+    order: 3;
+  }
+  .site-nav.is-open .nav-links{
+    display: flex;
+  }
+  .nav-brand{
+    flex: 1;
+  }
+  .nav-actions{
+    margin-left: auto;
+  }
+  .nav-links{
+    justify-content: center;
+  }
+  .masthead--hero header nav{
+    padding-left: 0;
+  }
+  .home-grid{ grid-template-columns: 1fr; }
   .hero-card__grid{ grid-template-columns: 1fr; }
   .hero-card__media{
     border-left: 0;
-    border-top: 1px solid var(--border-1);
+    border-top: 1px solid var(--border);
     min-height: 180px;
   }
-}
-.actions{
-  display:flex;
-  gap:.75rem;
-  flex-wrap:wrap;
-  margin-top:1rem;
+  .masthead{
+    padding-bottom: 1rem;
+  }
+  .masthead--hero{
+    padding-bottom: 1.75rem;
+  }
+  .masthead__content{
+    padding-top: 0.75rem;
+  }
+  .hero-card--overlay .hero-card__text{
+    padding: 1.25rem 1rem;
+  }
+  .badges{ grid-template-columns: 1fr; }
+  .sponsors__grid{ grid-template-columns: repeat(2, 1fr); }
+  .sponsor img, .sponsor-card img{ max-height: 4rem; }
 }
 
-.theme-toggle{
-  border: 1px solid var(--border-1);
-  border-radius: 999px;
-  padding: .35rem .55rem;
-  background: var(--surface-1);
+@media (max-width: 560px){
+  header nav{
+    padding: 0.5rem 0;
+  }
+  header nav ul{
+    column-gap: 0.6rem;
+  }
+  .site-logo{
+    height: 4rem;
+  }
+  .footer-meta{
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  .footer-title,
+  .footer-tagline{
+    display: block;
+    text-align: center;
+  }
+  .footer-logo{
+    order: 2;
+  }
+  .footer-tagline{
+    order: 3;
+    white-space: normal;
+  }
+  .footer-logo{
+  height: 8em;
 }
-.theme-toggle:hover{
-  background: var(--surface-2);
+.sponsor img, .sponsor-card img{ max-height: 2.8rem; }
 }

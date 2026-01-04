@@ -2,6 +2,9 @@ baseURL = "https://frbk.org/"
 languageCode = "nb-no"
 title = "Fiksdal/Rekdal ballklubb"
 
+[permalinks]
+sider = "/:slug/"
+
 [params]
 description = "Fotballglede for alle sidan 1979"
 enableMatches = true

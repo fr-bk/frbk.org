@@ -1,8 +1,6 @@
-{{ define "main" }}
-
-<!-- HERO -->
-<section class="hero-card">
-  <div class="hero-card__grid">
+{{ define "hero" }}
+<section class="hero-card hero-card--overlay">
+  <div class="hero-card__grid hero-card__grid--single">
     <div class="hero-card__text">
       <h1>Fiksdal/Rekdal ballklubb</h1>
       <p class="lead">Ein inkluderande fotballklubb for barn, unge og vaksne.</p>
@@ -12,12 +10,11 @@
         <a href="/kontakt/" role="button" class="secondary">Bli med</a>
       </div>
     </div>
-
-    <div class="hero-card__media" aria-hidden="true"></div>
   </div>
 </section>
+{{ end }}
 
-
+{{ define "main" }}
 <!-- MAIN GRID -->
 <section class="home-grid">
   <!-- NYHETER -->
@@ -83,6 +80,7 @@
   </article>
 {{ end }}
 
+</section>
 
 <!-- BADGES / MERKER -->
 <section class="badges">
@@ -103,13 +101,15 @@
 <!-- SPONSORER -->
 <section class="sponsors">
   <h2>Sponsorer</h2>
+
   <div class="sponsors__grid">
-    <div class="sponsor"></div>
-    <div class="sponsor"></div>
-    <div class="sponsor"></div>
-    <div class="sponsor"></div>
-    <div class="sponsor"></div>
-    <div class="sponsor"></div>
+    <a class="sponsor-card" href="#" aria-label="Sparebanken Møre">
+      <img src="/img/sponsor-sbm.png" alt="Sparebanken Møre">
+    </a>
+
+    <a class="sponsor-card" href="#" aria-label="Molde FK Prosjekt tilhørighet">
+      <img src="/img/sponsor-mfk.png" alt="Molde FK – Prosjekt tilhørighet">
+    </a>
   </div>
 </section>
 

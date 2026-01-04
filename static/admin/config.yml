@@ -1,0 +1,47 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "static/img/frbk"
+public_folder: "/img/frbk"
+
+local_backend: true
+
+preview_styles:
+  - "https://unpkg.com/@picocss/pico@latest/css/pico.min.css"
+  - "http://localhost:1313/css/custom.css"
+
+collections:
+  - name: "home"
+    label: "Hjem"
+    files:
+      - name: "home"
+        label: "Forside"
+        file: "content/_index.md"
+        fields:
+          - { label: "Tittel", name: "title", widget: "string" }
+          - { label: "Hero-bilde", name: "heroImage", widget: "image", required: false }
+          - { label: "Hero-posisjon", name: "heroPosition", widget: "string", required: false, hint: "f.eks. center, top, 50% 30%" }
+  - name: "pages"
+    label: "Sider"
+    folder: "content/sider"
+    create: false
+    slug: "{{slug}}"
+    fields:
+      - { label: "Tittel", name: "title", widget: "string" }
+      - { label: "Slug", name: "slug", widget: "string" }
+      - { label: "Hero-bilde", name: "heroImage", widget: "image", required: false }
+      - { label: "Hero-posisjon", name: "heroPosition", widget: "string", required: false, hint: "f.eks. center, top, 50% 30%" }
+      - { label: "Innhold", name: "body", widget: "markdown" }
+  - name: "news"
+    label: "Nyheter"
+    folder: "content/nyheter"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - { label: "Tittel", name: "title", widget: "string" }
+      - { label: "Dato", name: "date", widget: "datetime" }
+      - { label: "Ingress", name: "summary", widget: "text", required: false }
+      - { label: "Hero-bilde", name: "heroImage", widget: "image", required: false }
+      - { label: "Hero-posisjon", name: "heroPosition", widget: "string", required: false, hint: "f.eks. center, top, 50% 30%" }
+      - { label: "Innhold", name: "body", widget: "markdown" }

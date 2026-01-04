@@ -6,7 +6,7 @@
     if (theme === "light" || theme === "dark") {
       root.setAttribute("data-theme", theme);
     } else {
-      root.removeAttribute("data-theme"); // fall back to system
+      root.removeAttribute("data-theme"); // fall back til system
     }
   }
 
@@ -22,5 +22,28 @@
 
     root.setAttribute("data-theme", next);
     localStorage.setItem(STORAGE_KEY, next);
+
+    btn.setAttribute("aria-pressed", String(next === "dark"));
+    btn.classList.remove("is-toggling");
+    void btn.offsetWidth;
+    btn.classList.add("is-toggling");
   });
+
+  const nav = document.querySelector(".site-nav");
+  const menuBtn = document.querySelector(".menu-toggle");
+  const navLinks = document.querySelector(".nav-links");
+
+  if (nav && menuBtn && navLinks) {
+    menuBtn.addEventListener("click", () => {
+      const isOpen = nav.classList.toggle("is-open");
+      menuBtn.setAttribute("aria-expanded", String(isOpen));
+    });
+
+    navLinks.addEventListener("click", (e) => {
+      if (e.target.closest("a")) {
+        nav.classList.remove("is-open");
+        menuBtn.setAttribute("aria-expanded", "false");
+      }
+    });
+  }
 })();
