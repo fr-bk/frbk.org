@@ -158,6 +158,7 @@ header nav ul{
   align-items: center;
   margin: 0;
   padding: 0;
+  list-style: none;
 }
 
 .site-logo{
@@ -170,6 +171,15 @@ header nav ul{
   display: flex;
   align-items: center;
   gap: 1rem;
+}
+
+.nav-links li{
+  list-style: none;
+}
+
+.nav-links a{
+  display: inline-flex;
+  align-items: center;
 }
 
 .nav-brand{
@@ -882,6 +892,8 @@ footer.container{
     flex-basis: 100%;
     padding-bottom: 0.5rem;
     order: 3;
+    position: relative;
+    z-index: 2;
   }
   .site-nav.is-open .nav-links{
     display: flex;
@@ -904,6 +916,23 @@ footer.container{
   }
   .nav-links{
     justify-content: center;
+    align-items: stretch;
+  }
+  .nav-links li{
+    width: 100%;
+    max-width: 24rem;
+  }
+  .nav-links a{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border-radius: 999px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+  }
+  .nav-links__facebook a{
+    gap: 0.35rem;
   }
   .section-intro{
     flex-direction: column;

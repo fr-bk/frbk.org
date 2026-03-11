@@ -1,18 +1,9 @@
-import { createClient } from "@sanity/client";
+import { sanityClient } from "sanity:client";
 import imageUrlBuilder from "@sanity/image-url";
 
 const visualEditingEnabled =
   import.meta.env.PUBLIC_SANITY_VISUAL_EDITING_ENABLED === "true";
 const previewToken = import.meta.env.SANITY_API_READ_TOKEN;
-const canLoadDrafts = visualEditingEnabled && Boolean(previewToken);
-
-export const sanityClient = createClient({
-  projectId: import.meta.env.PUBLIC_SANITY_PROJECT_ID,
-  dataset: import.meta.env.PUBLIC_SANITY_DATASET ?? "production",
-  apiVersion: "2025-01-01",
-  perspective: "published",
-  useCdn: true,
-});
 
 const builder = imageUrlBuilder(sanityClient);
 
@@ -22,27 +13,24 @@ export function urlFor(source) {
 }
 
 export async function loadQuery(query, params = {}) {
-  const enableOverlays = visualEditingEnabled;
-  const options = enableOverlays
-    ? {
-        filterResponse: false,
-        perspective: canLoadDrafts ? "drafts" : "published",
-        resultSourceMap: "withKeyArraySelector",
-        stega: {
-          enabled: true,
-          studioUrl: "/studio",
-        },
-        useCdn: false,
-        ...(canLoadDrafts ? { token: previewToken } : {}),
-      }
-    : {
-        perspective: "published",
-        useCdn: true,
-      };
+  if (visualEditingEnabled && !previewToken) {
+    throw new Error(
+      "The SANITY_API_READ_TOKEN environment variable is required during Visual Editing."
+    );
+  }
+
+  const options = {
+    filterResponse: false,
+    perspective: visualEditingEnabled ? "drafts" : "published",
+    resultSourceMap: visualEditingEnabled ? "withKeyArraySelector" : false,
+    stega: visualEditingEnabled,
+    ...(visualEditingEnabled ? { token: previewToken } : {}),
+    useCdn: !visualEditingEnabled,
+  };
 
   const result = await sanityClient.fetch(query, params, options);
 
-  return enableOverlays ? result.result : result;
+  return result.result;
 }
 
 export const presentationEnabled = visualEditingEnabled;
