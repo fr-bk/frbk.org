@@ -1,9 +1,9 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { sanityClient } from "../../lib/sanity.js";
+import { loadQuery } from "../../lib/sanity.js";
 import { allNyheterQuery } from "../../lib/queries.js";
 
-const alleNyheter = await sanityClient.fetch(allNyheterQuery);
+const alleNyheter = await loadQuery(allNyheterQuery);
 ---
 
 <BaseLayout title="Nyheter">

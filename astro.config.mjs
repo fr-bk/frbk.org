@@ -17,6 +17,9 @@ export default defineConfig({
       dataset: env.PUBLIC_SANITY_DATASET ?? "production",
       useCdn: true,
       studioBasePath: "/studio",
+      stega: {
+        studioUrl: "/studio",
+      },
     }),
   ],
 });

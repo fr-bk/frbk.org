@@ -2,7 +2,7 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { sanityClient, urlFor } from "../lib/sanity.js";
+import { loadQuery, urlFor } from "../lib/sanity.js";
 import { allNyheterQuery, hjemmesideQuery } from "../lib/queries.js";
 
 const FOTBALL_URL =
@@ -12,8 +12,8 @@ const ICS_URL =
 
 // Hent framsidedata og nyheter frå Sanity
 const [hjemmeside, alleNyheter] = await Promise.all([
-  sanityClient.fetch(hjemmesideQuery),
-  sanityClient.fetch(allNyheterQuery),
+  loadQuery(hjemmesideQuery),
+  loadQuery(allNyheterQuery),
 ]);
 
 const sisteNyheter = alleNyheter.slice(0, 5);

@@ -91,6 +91,8 @@
 /* ---------- Pico variabler mapping---------- */
 :root{
   --pico-primary: var(--brand);
+  --pico-primary-background: var(--brand);
+  --pico-primary-border: var(--brand);
   --pico-border-radius: var(--radius);
 }
 
@@ -836,7 +838,7 @@ footer.container{
   font-size: 0.9rem;
   line-height: 1.45;
   word-break: break-word;
-  white-space: pre-wrap;
+  white-space: normal;
 }
 .frbk-chat__msg--user {
   align-self: flex-end;
@@ -852,12 +854,29 @@ footer.container{
   border-bottom-left-radius: 4px;
 }
 
-/* Dark mode for assistent-boblane */
-[data-theme="dark"] .frbk-chat__msg--assistant,
+/* Dark mode for chat-vindauget */
+[data-theme="dark"] .frbk-chat__window,
+[data-theme="dark"] .frbk-chat__footer {
+  background: #1a2030;
+}
 @media (prefers-color-scheme: dark) {
-  [data-theme="auto"] .frbk-chat__msg--assistant {
-    background: rgba(255,255,255,0.07);
+  :root:not([data-theme="light"]) .frbk-chat__window,
+  :root:not([data-theme="light"]) .frbk-chat__footer {
+    background: #1a2030;
+  }
+}
+
+/* Dark mode for assistent-boblane */
+[data-theme="dark"] .frbk-chat__msg--assistant {
+  background: #252e42;
+  border-color: rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.92);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .frbk-chat__msg--assistant {
+    background: #252e42;
     border-color: rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.92);
   }
 }
 

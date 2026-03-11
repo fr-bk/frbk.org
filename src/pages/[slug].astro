@@ -1,11 +1,11 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { PortableText } from "astro-portabletext";
-import { sanityClient, urlFor } from "../lib/sanity.js";
+import { loadQuery, urlFor } from "../lib/sanity.js";
 import { sideBySlugQuery } from "../lib/queries.js";
 
 const { slug } = Astro.params;
-const side = await sanityClient.fetch(sideBySlugQuery, { slug });
+const side = await loadQuery(sideBySlugQuery, { slug });
 
 if (!side) {
   Astro.response.status = 404;

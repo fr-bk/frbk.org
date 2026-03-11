@@ -78,10 +78,36 @@
     btn.setAttribute("aria-label", open ? "Lukk FRBK-assistent" : "Opne FRBK-assistent");
   }
 
+  function renderMarkdown(text) {
+    // Escape HTML first to prevent XSS
+    var s = text
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+    // Bold
+    s = s.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+    // Italic
+    s = s.replace(/\*([^*\n]+?)\*/g, "<em>$1</em>");
+    // Headers (## or #) → bold line
+    s = s.replace(/^#{1,3}\s+(.+)$/gm, "<strong>$1</strong>");
+    // Links [text](url) — berre http/https
+    s = s.replace(
+      /\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g,
+      '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>'
+    );
+    // Newlines → <br>
+    s = s.replace(/\n/g, "<br>");
+    return s;
+  }
+
   function appendMsg(role, text, container) {
     var el = document.createElement("div");
     el.className = "frbk-chat__msg frbk-chat__msg--" + role;
-    el.textContent = text;
+    if (role === "assistant") {
+      el.innerHTML = renderMarkdown(text);
+    } else {
+      el.textContent = text;
+    }
     container.appendChild(el);
     container.scrollTop = container.scrollHeight;
     return el;

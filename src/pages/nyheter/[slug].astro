@@ -1,11 +1,11 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { PortableText } from "astro-portabletext";
-import { sanityClient, urlFor } from "../../lib/sanity.js";
+import { loadQuery, urlFor } from "../../lib/sanity.js";
 import { nyhetBySlugQuery } from "../../lib/queries.js";
 
 const { slug } = Astro.params;
-const nyhet = await sanityClient.fetch(nyhetBySlugQuery, { slug });
+const nyhet = await loadQuery(nyhetBySlugQuery, { slug });
 
 if (!nyhet) {
   Astro.response.status = 404;
