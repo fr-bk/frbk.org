@@ -3,11 +3,26 @@
 
   var API_URL = "/api/chat";
   var WELCOME =
-    "Hei! Eg heiter Raymond 🔵🟠 Spør meg om kampar, klubbhistoria, kontaktinfo – eller kva som helst anna du lurer på!";
+    "Hei! Eg heiter Raymond 🟠🔴🔵 Spør meg om kampar, klubbhistoria, kontaktinfo – eller kva som helst anna du lurer på!";
 
+  var STORAGE_KEY = "frbk-chat-history";
   var isOpen = false;
   var isLoading = false;
   var messages = [];
+
+  function saveHistory() {
+    try {
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+    } catch (_) {}
+  }
+
+  function loadHistory() {
+    try {
+      return JSON.parse(sessionStorage.getItem(STORAGE_KEY) || "[]");
+    } catch (_) {
+      return [];
+    }
+  }
 
   function init() {
     var container = document.createElement("div");
@@ -46,7 +61,15 @@
     var sendBtn = win.querySelector(".frbk-chat__send");
     var closeBtn = win.querySelector(".frbk-chat__close");
 
-    appendMsg("assistant", WELCOME, msgsEl);
+    messages = loadHistory();
+    if (messages.length === 0) {
+      appendMsg("assistant", WELCOME, msgsEl);
+    } else {
+      appendMsg("assistant", WELCOME, msgsEl);
+      for (var i = 0; i < messages.length; i++) {
+        appendMsg(messages[i].role, messages[i].content, msgsEl);
+      }
+    }
 
     btn.addEventListener("click", function () {
       toggleOpen(win, btn, input);
@@ -134,6 +157,7 @@
     input.value = "";
 
     messages.push({ role: "user", content: text });
+    saveHistory();
     appendMsg("user", text, msgsEl);
     setLoading(msgsEl, true);
 
@@ -143,13 +167,59 @@
       body: JSON.stringify({ messages: messages }),
     })
       .then(function (res) {
-        return res.json();
-      })
-      .then(function (data) {
-        setLoading(msgsEl, false);
-        var reply = data.response || data.error || "Noko gjekk gale. Prøv igjen.";
-        messages.push({ role: "assistant", content: reply });
-        appendMsg("assistant", reply, msgsEl);
+        if (!res.ok || !res.body) throw new Error("server error");
+
+        var reader = res.body.getReader();
+        var decoder = new TextDecoder();
+        var buffer = "";
+        var replyText = "";
+        var msgEl = null;
+
+        function read() {
+          reader.read().then(function (result) {
+            if (result.done) {
+              setLoading(msgsEl, false);
+              if (replyText) {
+                messages.push({ role: "assistant", content: replyText });
+                saveHistory();
+              }
+              return;
+            }
+
+            buffer += decoder.decode(result.value, { stream: true });
+            var lines = buffer.split("\n");
+            buffer = lines.pop();
+
+            for (var i = 0; i < lines.length; i++) {
+              var line = lines[i];
+              if (!line.startsWith("data: ")) continue;
+              var data = line.slice(6);
+              if (data === "[DONE]") continue;
+              try {
+                var parsed = JSON.parse(data);
+                if (parsed.error) {
+                  setLoading(msgsEl, false);
+                  appendMsg("assistant", parsed.error, msgsEl);
+                  return;
+                }
+                if (parsed.text) {
+                  if (!msgEl) {
+                    msgEl = appendMsg("assistant", "", msgsEl);
+                    var loadEl = document.getElementById("frbk-loading");
+                    if (loadEl) msgsEl.appendChild(loadEl);
+                  }
+                  replyText += parsed.text;
+                  msgEl.innerHTML = renderMarkdown(replyText);
+                  msgsEl.scrollTop = msgsEl.scrollHeight;
+                }
+              } catch (_) {}
+            }
+
+            read();
+          });
+        }
+
+        read();
       })
       .catch(function () {
         setLoading(msgsEl, false);

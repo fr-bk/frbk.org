@@ -6,6 +6,9 @@
   directory = "netlify/functions"
   node_bundler = "esbuild"
 
+[functions."frbk-chat"]
+  node_bundler = "esbuild"
+
 [build.environment]
   NODE_VERSION = "20"
 
