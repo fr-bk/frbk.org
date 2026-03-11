@@ -137,7 +137,7 @@ async function buildPageDocument(parsed) {
   const navigationOrder = parsed.data.menu?.main?.weight ?? 100;
 
   return {
-    _id: `side.${slug}`,
+    _id: publicDocumentId("side", slug),
     _type: "side",
     title: parsed.data.title,
     slug: { _type: "slug", current: slug },
@@ -156,7 +156,7 @@ async function buildNewsDocument(parsed, fileName) {
   const publishedAt = normalizeDate(parsed.data.date);
 
   return {
-    _id: `nyhet.${slug}`,
+    _id: publicDocumentId("nyhet", slug),
     _type: "nyhet",
     title: parsed.data.title,
     slug: { _type: "slug", current: slug },
@@ -416,6 +416,10 @@ function slugify(value = "") {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
+}
+
+function publicDocumentId(prefix, slug) {
+  return `${prefix}-${slug}`.replace(/[^a-zA-Z0-9_-]/g, "-");
 }
 
 async function parseMarkdownFile(filePath) {

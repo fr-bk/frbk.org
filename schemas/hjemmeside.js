@@ -122,4 +122,17 @@ export default {
       ],
     },
   ],
+  preview: {
+    select: {
+      title: "heroTitle",
+      media: "heroImage",
+    },
+    prepare({ title, media }) {
+      return {
+        title: title || "Framside",
+        subtitle: "Singleton",
+        media,
+      };
+    },
+  },
 };
