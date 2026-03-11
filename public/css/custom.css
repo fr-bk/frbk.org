@@ -887,10 +887,10 @@ footer.container{
     display: none;
     flex-direction: column;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.15rem;
     width: 100%;
     flex-basis: 100%;
-    padding-bottom: 0.5rem;
+    padding: 0.35rem 0 0.5rem;
     order: 3;
     position: relative;
     z-index: 2;
@@ -926,10 +926,10 @@ footer.container{
     display: flex;
     justify-content: center;
     width: 100%;
-    padding: 0.8rem 1rem;
-    border-radius: 999px;
-    background: var(--surface);
-    border: 1px solid var(--border);
+    padding: 0.65rem 1rem;
+    border-radius: 0;
+    background: transparent;
+    border: 0;
   }
   .nav-links__facebook a{
     gap: 0.35rem;
