@@ -7,44 +7,36 @@ menu:
     weight: 60
 ---
 
-FRBK ønsker at alle spillere i klubben skal ha som mål å spille etter Norges Fotballforbund sine tiltak for å forankre prinsippet om Fair Play. Dette ønsker vi å gjøre ved å fremme følgende:
+Fair Play handlar om korleis vi oppfører oss i trening, kamp og rundt laget. I Fiksdal/Rekdal ballklubb skal alle oppleve fotballen som trygg, inkluderande og respektfull.
 
-- Ta godt vare på medspillere og inkludere lagkamerater  
-- Unngå stygt spill og filming  
-- Skape trygghet og god lagånd på banen  
-- Trene og spille kamper med godt humør  
-- Behandle motstandere med respekt  
-- Hjelpe skadet spiller uansett lag  
-- Hilse på motspillere og takke for kampen  
-- Ikke kjefte på andre spillere eller dommere  
-
-Trenere og lagledere skal sørge for at spillerne har god kjennskap til regler og retningslinjer, og at disse blir fulgt.
+## Dette forventar vi av spelarane
+- Ta vare på medspelarar og inkludere alle på laget  
+- Spele reint og vise respekt for motstandar og dommar  
+- Bidra til tryggleik, godt humør og god lagånd  
+- Helse før kamp og takke for kampen etterpå  
+- Unngå kjeftbruk, filming og negativ oppførsel  
 
 ## Trener og lagleder – ansvar
-Det er trener/lagleders ansvar at spillerne forstår:
-- Betydning av dommerens situasjon og funksjon  
-- Betydningen av å ikke overreagere på dommeravgjørelser  
-- At det er dommerens avgjørelse som teller, og at det er bortkastet å pådra seg straff for kjeftbruk  
-- Betydningen av å følge regelverket – det tjener alle parter, og dermed også spillet  
+Trenarar og lagleiarar skal gjere forventningane tydelege og følgje dei opp i praksis.
+- Forklare spelarane rolla til dommaren og kvifor avgjerdene må respekterast  
+- Reagere tidleg på dårleg språk eller ufin oppførsel  
+- Sørgje for at Fair Play er ein naturleg del av både trening og kamp  
+- Vere gode rollemodellar i møte med spelarar, foreldre og motstandarar  
 
 ## Foreldre og støtteapparat
-Ved foreldremøter og spillermøter ønsker vi å formidle følgende:
-- Foreldrenes interesse og oppfølging betyr mye for barn og unge  
-- Likeverd, aksept og inkludering bør gjelde alle i fotballmiljøet  
-- Verdsett opplevelse, god oppførsel og lagånd høyt  
-- Respekter trenerens bruk av spillere – ikke kritiser avgjørelser  
-- Dommeren prøver også å gjøre sitt beste – ikke kritiser avgjørelser  
-- Resultatet må ikke bli for viktig – mestring betyr mye  
-- Gi oppmuntring til alle spillerne – ikke bare dine kjente  
-- Stimuler til deltakelse – uten noen form for press  
-- Ta gjerne initiativ til å bidra på foreldremøter for å avklare holdninger og ambisjoner  
+Foreldre og støtteapparat er viktige for miljøet rundt laga.
+- Støtt alle spelarane, ikkje berre dine eigne  
+- Vis respekt for trenarar, dommarar og motstandarar  
+- Legg vekt på meistring, innsats og trivsel framfor resultat  
+- Bidra til eit trygt miljø med låg terskel og positiv tone  
 
 ## Konkrete tiltak
-- Vi har årlig Fair Play-dag der vi minner alle på viktigheten av å ha det gøy, være positive og vise respekt.
-- Spillerne hilser på hverandre før kamp og alle takker for kampen.
+- Vi har årleg Fair Play-dag i klubben  
+- Laga snakkar om forventningar før sesong og undervegs  
+- Spelarane helsar før kamp og takkar for kampen etterpå  
 
 ## Verdier
-**Trygghet:** klare holdninger mot rusmidler, doping, mobbing, vold, rasisme, diskriminering og trakassering.  
-**Glede:** glede skal prege trening, kamp og miljøet rundt fotballen.  
-**Respekt:** alle møtes med samme respekt uansett rolle.  
-**Likeverd:** alle er like mye verdt og skal få et likeverdig tilbud.
+**Tryggleik:** Vi toler ikkje mobbing, vald, rasisme, diskriminering eller trakassering.  
+**Glede:** Fotballen skal vere ein stad for meistring, energi og trivsel.  
+**Respekt:** Alle blir møtt med same respekt, uansett rolle.  
+**Likeverd:** Alle skal oppleve eit trygt og inkluderande tilbod i klubben.

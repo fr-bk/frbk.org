@@ -9,6 +9,7 @@
   var isOpen = false;
   var isLoading = false;
   var messages = [];
+  var lastFocus = null;
 
   function saveHistory() {
     try {
@@ -38,7 +39,9 @@
     win.className = "frbk-chat__window";
     win.setAttribute("role", "dialog");
     win.setAttribute("aria-label", "Raymond chat");
+    win.setAttribute("aria-modal", "false");
     win.setAttribute("aria-hidden", "true");
+    win.setAttribute("tabindex", "-1");
     win.innerHTML =
       '<div class="frbk-chat__header">' +
       '<span class="frbk-chat__title">Raymond</span>' +
@@ -105,9 +108,23 @@
         send(input, msgsEl);
       }
     });
+
+    win.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        setOpen(false, win, btn);
+        return;
+      }
+
+      if (e.key !== "Tab" || !isOpen) return;
+      trapFocus(e, win);
+    });
   }
 
   function toggleOpen(win, btn, input) {
+    if (!isOpen) {
+      lastFocus = document.activeElement;
+    }
     setOpen(!isOpen, win, btn);
     if (isOpen) input.focus();
   }
@@ -117,7 +134,29 @@
     win.classList.toggle("frbk-chat__window--open", open);
     btn.classList.toggle("frbk-chat__toggle--open", open);
     win.setAttribute("aria-hidden", open ? "false" : "true");
+    win.setAttribute("aria-modal", open ? "true" : "false");
     btn.setAttribute("aria-label", open ? "Lukk Raymond" : "Opne Raymond");
+    if (!open && lastFocus && typeof lastFocus.focus === "function") {
+      lastFocus.focus();
+    }
+  }
+
+  function trapFocus(event, container) {
+    var focusable = container.querySelectorAll(
+      'button:not([disabled]), [href], input:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    );
+    if (!focusable.length) return;
+
+    var first = focusable[0];
+    var last = focusable[focusable.length - 1];
+
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
   }
 
   function renderMarkdown(text) {

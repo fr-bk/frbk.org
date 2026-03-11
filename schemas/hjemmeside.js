@@ -7,6 +7,7 @@ export default {
     { name: "hero", title: "Toppfelt", default: true },
     { name: "sections", title: "Seksjonar" },
     { name: "sponsors", title: "Sponsorar" },
+    { name: "social", title: "Sosiale medium" },
     { name: "seo", title: "SEO / Deling" },
   ],
   fields: [
@@ -157,6 +158,13 @@ export default {
           },
         },
       ],
+    },
+    {
+      name: "facebookUrl",
+      title: "Facebook-lenke",
+      type: "url",
+      group: "social",
+      description: "T.d. https://www.facebook.com/fiksdalrekdalbk – visast som ikon i navigasjonen.",
     },
     {
       name: "metaDescription",

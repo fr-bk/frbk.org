@@ -6,6 +6,7 @@ export default {
   type: "document",
   groups: [
     { name: "content", title: "Innhald", default: true },
+    { name: "structured", title: "Innhaldsblokker" },
     { name: "hero", title: "Toppfelt" },
     { name: "navigation", title: "Meny" },
     { name: "settings", title: "Innstillingar" },
@@ -117,6 +118,288 @@ export default {
                 Rule.required().warning("Hugs å leggje til alt-tekst på alle bilete"),
             },
           ],
+        },
+      ],
+    },
+    {
+      name: "contactCards",
+      title: "Kontaktkort",
+      type: "array",
+      group: "structured",
+      hidden: ({ document }) => document?.slug?.current !== "kontakt",
+      description: "Visast som eigne kontaktkort på kontaktsida.",
+      of: [
+        {
+          type: "object",
+          fields: [
+            {
+              name: "name",
+              title: "Namn",
+              type: "string",
+              validation: (Rule) => Rule.required(),
+            },
+            {
+              name: "role",
+              title: "Rolle",
+              type: "string",
+            },
+            {
+              name: "phone",
+              title: "Telefon",
+              type: "string",
+            },
+            {
+              name: "email",
+              title: "E-post",
+              type: "string",
+            },
+            {
+              name: "linkLabel",
+              title: "Lenketekst",
+              type: "string",
+            },
+            {
+              name: "linkUrl",
+              title: "Lenke",
+              type: "url",
+            },
+          ],
+          preview: {
+            select: {
+              title: "name",
+              subtitle: "role",
+            },
+          },
+        },
+      ],
+    },
+    {
+      name: "documents",
+      title: "Dokumentliste",
+      type: "array",
+      group: "structured",
+      hidden: ({ document }) => !["dokumenter", "utleie"].includes(document?.slug?.current),
+      description: "Dokument som skal visast (PDF, avtalar, reglar o.l.).",
+      of: [
+        {
+          type: "object",
+          fields: [
+            {
+              name: "title",
+              title: "Tittel",
+              type: "string",
+              validation: (Rule) => Rule.required(),
+            },
+            {
+              name: "year",
+              title: "År",
+              type: "number",
+            },
+            {
+              name: "url",
+              title: "Lenke",
+              type: "url",
+              validation: (Rule) => Rule.required(),
+            },
+          ],
+          preview: {
+            select: {
+              title: "title",
+              year: "year",
+            },
+            prepare({ title, year }) {
+              return {
+                title,
+                subtitle: year ? `${year}` : "Utan årstal",
+              };
+            },
+          },
+        },
+      ],
+    },
+    {
+      name: "clubFacts",
+      title: "Klubbfakta",
+      type: "array",
+      group: "structured",
+      hidden: ({ document }) => document?.slug?.current !== "om-klubben",
+      description: "Korte fakta som presenterer klubben tydeleg på sida.",
+      of: [
+        {
+          type: "object",
+          fields: [
+            {
+              name: "label",
+              title: "Felt",
+              type: "string",
+              validation: (Rule) => Rule.required(),
+            },
+            {
+              name: "value",
+              title: "Verdi",
+              type: "string",
+              validation: (Rule) => Rule.required(),
+            },
+          ],
+          preview: {
+            select: {
+              title: "label",
+              subtitle: "value",
+            },
+          },
+        },
+      ],
+    },
+    {
+      name: "boardMembers",
+      title: "Styremedlemmar",
+      type: "array",
+      group: "structured",
+      hidden: ({ document }) => document?.slug?.current !== "styre",
+      description: "Noverande styre. Oppdater kvart år.",
+      of: [
+        {
+          type: "object",
+          fields: [
+            {
+              name: "name",
+              title: "Namn",
+              type: "string",
+              validation: (Rule) => Rule.required(),
+            },
+            {
+              name: "role",
+              title: "Rolle",
+              type: "string",
+              description: "T.d. Leiar, Kasserar, Styremedlem",
+              validation: (Rule) => Rule.required(),
+            },
+            {
+              name: "phone",
+              title: "Telefon",
+              type: "string",
+            },
+            {
+              name: "email",
+              title: "E-post",
+              type: "string",
+            },
+          ],
+          preview: {
+            select: { title: "name", subtitle: "role" },
+          },
+        },
+      ],
+    },
+    {
+      name: "notablePlayers",
+      title: "Spelarar som har utmerka seg",
+      type: "array",
+      group: "structured",
+      hidden: ({ document }) => document?.slug?.current !== "om-klubben",
+      description: "Spelarar frå klubben som har nådd nasjonalt eller internasjonalt nivå.",
+      of: [
+        {
+          type: "object",
+          fields: [
+            {
+              name: "name",
+              title: "Namn",
+              type: "string",
+              validation: (Rule) => Rule.required(),
+            },
+            {
+              name: "photo",
+              title: "Bilete",
+              type: "image",
+              options: { hotspot: true },
+              fields: [
+                {
+                  name: "alt",
+                  title: "Alt-tekst",
+                  type: "string",
+                  validation: (Rule) =>
+                    Rule.required().warning("Hugs alt-tekst på spelarbilete"),
+                },
+              ],
+            },
+            {
+              name: "caps",
+              title: "Landskampar",
+              type: "number",
+              description: "Antal A-landskampar. Lat stå tom om ukjent.",
+            },
+            {
+              name: "clubs",
+              title: "Klubbar",
+              type: "string",
+              description: "T.d. «Hertha Berlin, Borussia Mönchengladbach»",
+            },
+            {
+              name: "description",
+              title: "Beskriving",
+              type: "text",
+              rows: 3,
+            },
+          ],
+          preview: {
+            select: {
+              title: "name",
+              caps: "caps",
+              clubs: "clubs",
+            },
+            prepare({ title, caps, clubs }) {
+              const sub = [caps ? `${caps} A-kampar` : null, clubs]
+                .filter(Boolean)
+                .join(" · ");
+              return { title, subtitle: sub || "Spelar" };
+            },
+          },
+        },
+      ],
+    },
+    {
+      name: "milestones",
+      title: "Utmerkingar",
+      type: "array",
+      group: "structured",
+      hidden: ({ document }) => document?.slug?.current !== "om-klubben",
+      description: "Prisar, æresmedlemmar og viktige milepælar — nyaste øvst.",
+      of: [
+        {
+          type: "object",
+          fields: [
+            {
+              name: "year",
+              title: "År",
+              type: "number",
+              validation: (Rule) => Rule.required(),
+            },
+            {
+              name: "title",
+              title: "Tittel",
+              type: "string",
+              validation: (Rule) => Rule.required(),
+            },
+            {
+              name: "text",
+              title: "Kort tekst",
+              type: "text",
+              rows: 2,
+            },
+          ],
+          preview: {
+            select: {
+              title: "title",
+              year: "year",
+            },
+            prepare({ title, year }) {
+              return {
+                title,
+                subtitle: year ? `${year}` : "",
+              };
+            },
+          },
         },
       ],
     },

@@ -31,10 +31,50 @@ export const sideBySlugQuery = `*[_type == "side" && slug.current == $slug][0] {
   title,
   "slug": slug.current,
   body,
+  contactCards[] {
+    name,
+    role,
+    phone,
+    email,
+    linkLabel,
+    linkUrl
+  },
+  documents[] {
+    title,
+    year,
+    url
+  },
+  clubFacts[] {
+    label,
+    value
+  },
+  milestones[] | order(year desc) {
+    year,
+    title,
+    text
+  },
+  boardMembers[] {
+    name,
+    role,
+    phone,
+    email
+  },
+  notablePlayers[] {
+    name,
+    caps,
+    clubs,
+    description,
+    "photoRef": photo
+  },
   "heroImageRef": heroImage,
   heroPosition,
   metaDescription,
   "ogImageRef": ogImage
+}`;
+
+/** Sosiale medium og global konfigurasjon frå framsida */
+export const globalConfigQuery = `*[_type == "hjemmeside" && _id == "hjemmeside-singleton"][0] {
+  facebookUrl
 }`;
 
 /** Framsida-singleton */

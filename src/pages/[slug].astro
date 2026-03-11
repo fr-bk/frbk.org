@@ -22,6 +22,62 @@ const ogImage = side?.ogImageRef
   : side?.heroImageRef
   ? urlFor(side.heroImageRef).width(1200).height(630).url()
   : null;
+
+const pageEnhancements = {
+  "om-klubben": {
+    eyebrow: "Klubben vår",
+    intro:
+      "Ei lokal fotballhistorie bygd på frivilligheit, fellesskap og generasjonar med engasjement.",
+    highlights: ["Stifta i 1979", "Kvalitetsklubb sidan 2020", "Trygg og inkluderande klubbkultur"],
+  },
+  "fair-play": {
+    eyebrow: "Verdigrunnlag",
+    intro:
+      "Fair Play er ikkje berre kampreglar, men måten vi møter spelarar, dommarar, foreldre og motstandarar på.",
+    highlights: ["Respekt i alle ledd", "Trygg arena for barn og unge", "Klare forventningar til trenarar og foreldre"],
+  },
+  kontakt: {
+    eyebrow: "Kontakt",
+    intro: null,
+    highlights: [],
+  },
+  styre: {
+    eyebrow: "Organisering",
+    intro: "Her finn du styret i Fiksdal/Rekdal ballklubb og kven som har dei ulike rollene i klubbarbeidet.",
+    highlights: [],
+  },
+  utleie: {
+    eyebrow: "Klubbhuset",
+    intro: "Informasjon om leige av klubbhuset, praktiske vilkår og dokument som gjeld for leigetakarar.",
+    highlights: [],
+  },
+  dokumenter: {
+    eyebrow: "Dokumentarkiv",
+    intro: null,
+    highlights: [],
+  },
+};
+
+const enhancement = pageEnhancements[slug] ?? {
+  eyebrow: "Informasjon",
+  intro: null,
+  highlights: [],
+};
+
+const contactCards = side?.contactCards ?? [];
+const documents = side?.documents ?? [];
+const clubFacts = side?.clubFacts ?? [];
+const milestones = side?.milestones ?? [];
+const notablePlayers = side?.notablePlayers ?? [];
+const boardMembers = side?.boardMembers ?? [];
+const hasStructuredSections =
+  contactCards.length > 0 || documents.length > 0 || clubFacts.length > 0 ||
+  milestones.length > 0 || notablePlayers.length > 0 || boardMembers.length > 0;
+const shouldRenderHighlights = enhancement.highlights.length > 0 && !hasStructuredSections;
+const shouldRenderBody =
+  side?.body?.length > 0 && !(slug === "kontakt" && contactCards.length > 0);
+
+const sanitizePhoneHref = (value = "") => value.replace(/[^\d+]/g, "");
 ---
 
 <BaseLayout
@@ -31,13 +87,176 @@ const ogImage = side?.ogImageRef
   description={pageDescription}
   ogImage={ogImage}
 >
-  <article class="prose">
+  <article class={`prose prose--page prose--${slug ?? "generic"}`}>
     {side ? (
       <>
-        <div class="page-header">
+        <header class="page-header page-header--rich">
+          <div class="page-header__meta">{enhancement.eyebrow}</div>
           <h1>{side.title}</h1>
-        </div>
-        {side.body && <div class="prose__body"><PortableText value={side.body} /></div>}
+          {enhancement.intro && <p class="lead">{enhancement.intro}</p>}
+        </header>
+
+        {shouldRenderHighlights && (
+          <section class="page-highlights" aria-label="Hovudpunkt">
+            {enhancement.highlights.map((item) => (
+              <div class="page-highlight">{item}</div>
+            ))}
+          </section>
+        )}
+
+        {boardMembers.length > 0 && (
+          <section class="info-section" aria-labelledby="board-title">
+            <div class="section-intro">
+              <div class="section-intro__eyebrow">Styret</div>
+              <h2 id="board-title">Styret</h2>
+            </div>
+            <div class="contact-grid">
+              {boardMembers.map((member) => (
+                <article class="contact-card">
+                  <div class="contact-card__role">{member.role}</div>
+                  <h3>{member.name}</h3>
+                  <div class="contact-card__details">
+                    {member.phone && (
+                      <a href={`tel:${sanitizePhoneHref(member.phone)}`}>{member.phone}</a>
+                    )}
+                    {member.email && <a href={`mailto:${member.email}`}>{member.email}</a>}
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {clubFacts.length > 0 && (
+          <section class="info-section info-section--facts" aria-labelledby="club-facts-title">
+            <div class="section-intro">
+              <div class="section-intro__eyebrow">Klubbfakta</div>
+              <h2 id="club-facts-title">Kort om klubben</h2>
+            </div>
+
+            <div class="facts-grid">
+              {clubFacts.map((fact) => (
+                <article class="fact-card">
+                  <div class="fact-card__label">{fact.label}</div>
+                  <div class="fact-card__value">{fact.value}</div>
+                </article>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {contactCards.length > 0 && (
+          <section class="info-section" aria-label="Kontaktpersonar">
+            <div class="section-intro">
+              <div class="section-intro__eyebrow">Kontaktpersonar</div>
+            </div>
+
+            <div class="contact-grid">
+              {contactCards.map((card) => (
+                <article class="contact-card">
+                  <div class="contact-card__role">{card.role ?? "Kontaktperson"}</div>
+                  <h3>{card.name}</h3>
+                  <div class="contact-card__details">
+                    {card.phone && (
+                      <a href={`tel:${sanitizePhoneHref(card.phone)}`}>{card.phone}</a>
+                    )}
+                    {card.email && <a href={`mailto:${card.email}`}>{card.email}</a>}
+                    {card.linkUrl && (
+                      <a href={card.linkUrl} target="_blank" rel="noreferrer">
+                        {card.linkLabel ?? "Opne lenke"}
+                      </a>
+                    )}
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {documents.length > 0 && (
+          <section class="info-section" aria-label="Dokument">
+            <div class="section-intro">
+              <div class="section-intro__eyebrow">Dokument</div>
+            </div>
+
+            <div class="document-list">
+              {documents.map((document) => (
+                <article class="document-card">
+                  <div class="document-card__year">{document.year ?? "Dokument"}</div>
+                  <div class="document-card__body">
+                    <h3>{document.title}</h3>
+                    <a href={document.url} target="_blank" rel="noreferrer">
+                      Opne dokument
+                    </a>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {shouldRenderBody && (
+          <div class="prose__body prose__body--surface"><PortableText value={side.body} /></div>
+        )}
+
+        {notablePlayers.length > 0 && (
+          <section class="info-section info-section--players" aria-labelledby="players-title">
+            <div class="section-intro">
+              <div class="section-intro__eyebrow">Stoltheit</div>
+              <h2 id="players-title">Spelarar som har utmerka seg</h2>
+            </div>
+            <div class="players-grid">
+              {notablePlayers.map((player) => (
+                <article class="player-card">
+                  {player.photoRef && (
+                    <div class="player-card__photo">
+                      <img
+                        src={urlFor(player.photoRef).width(160).height(160).fit("crop").url()}
+                        alt={player.photoRef.alt ?? player.name}
+                        width="160"
+                        height="160"
+                      />
+                    </div>
+                  )}
+                  <div class="player-card__body">
+                    <h3>{player.name}</h3>
+                    <div class="player-card__stats">
+                      {player.caps && (
+                        <div class="player-stat">
+                          <span class="player-stat__value">{player.caps}</span>
+                          <span class="player-stat__label">A-landskampar</span>
+                        </div>
+                      )}
+                    </div>
+                    {player.clubs && <p class="player-card__clubs">{player.clubs}</p>}
+                    {player.description && <p class="player-card__desc">{player.description}</p>}
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {milestones.length > 0 && (
+          <section class="info-section info-section--timeline" aria-labelledby="milestones-title">
+            <div class="section-intro">
+              <div class="section-intro__eyebrow">Heider og prisar</div>
+              <h2 id="milestones-title">Utmerkingar</h2>
+            </div>
+
+            <div class="timeline">
+              {milestones.map((milestone) => (
+                <article class="timeline-item">
+                  <div class="timeline-item__year">{milestone.year}</div>
+                  <div class="timeline-item__content">
+                    <h3>{milestone.title}</h3>
+                    {milestone.text && <p>{milestone.text}</p>}
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        )}
       </>
     ) : (
       <>

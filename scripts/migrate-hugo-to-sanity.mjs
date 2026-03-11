@@ -135,6 +135,7 @@ async function buildHomepageDocument(filePath) {
 async function buildPageDocument(parsed) {
   const slug = parsed.data.slug ?? slugify(parsed.data.title);
   const navigationOrder = parsed.data.menu?.main?.weight ?? 100;
+  const structuredContent = buildStructuredPageContent(slug, parsed.content);
 
   return {
     _id: publicDocumentId("side", slug),
@@ -145,7 +146,11 @@ async function buildPageDocument(parsed) {
     navigationTitle: parsed.data.navigationTitle ?? parsed.data.title,
     navigationOrder,
     heroPosition: normalizeHeroPosition(parsed.data.heroPosition),
-    body: await markdownToPortableText(parsed.content),
+    body: await markdownToPortableText(structuredContent.bodyMarkdown),
+    ...(structuredContent.contactCards ? { contactCards: structuredContent.contactCards } : {}),
+    ...(structuredContent.documents ? { documents: structuredContent.documents } : {}),
+    ...(structuredContent.clubFacts ? { clubFacts: structuredContent.clubFacts } : {}),
+    ...(structuredContent.milestones ? { milestones: structuredContent.milestones } : {}),
     ...(await maybeHeroImage(parsed.data.heroImage)),
   };
 }
@@ -420,6 +425,138 @@ function slugify(value = "") {
 
 function publicDocumentId(prefix, slug) {
   return `${prefix}-${slug}`.replace(/[^a-zA-Z0-9_-]/g, "-");
+}
+
+function buildStructuredPageContent(slug, markdown) {
+  if (slug === "kontakt") {
+    const intro = markdown.split("\n\n")[0]?.trim() ?? "";
+    const contactCards = extractContactCards(markdown);
+    return {
+      bodyMarkdown: intro,
+      ...(contactCards.length > 0 ? { contactCards } : {}),
+    };
+  }
+
+  if (slug === "dokumenter") {
+    return {
+      bodyMarkdown: "",
+      documents: extractDocuments(markdown),
+    };
+  }
+
+  if (slug === "om-klubben") {
+    return {
+      bodyMarkdown: stripMarkdownSections(markdown, [
+        "Milepæler",
+      ]),
+      clubFacts: [
+        structuredKeyValue("Stifta", "18. november 1979"),
+        structuredKeyValue("Kvalitetsklubb", "Godkjend sidan 2020"),
+        structuredKeyValue("Stad", "Møre og Romsdal"),
+        structuredKeyValue("Tilbod", "Fotball for barn og ungdom"),
+      ],
+      milestones: [
+        structuredMilestone(1979, "Klubben blir stifta", "Fiksdal/Rekdal ballklubb blir etablert 18. november for å gi barn og unge eit organisert fotballtilbod."),
+        structuredMilestone(2020, "Kvalitetsklubb", "Klubben blir godkjend som Kvalitetsklubb i NFF."),
+        structuredMilestone(2023, "Æresmedlemskap", "Elisabeth D. Nakken blir utnemnd som æresmedlem."),
+      ],
+    };
+  }
+
+  return { bodyMarkdown: markdown };
+}
+
+function extractContactCards(markdown) {
+  const name = markdown.match(/\*\*Leder:\*\*\s*(.+)/i)?.[1]?.trim() ?? "";
+  const phone = markdown.match(/\*\*Mobil:\*\*\s*(.+)/i)?.[1]?.trim() ?? "";
+  const email = markdown.match(/\*\*E-post:\*\*\s*(.+)/i)?.[1]?.trim() ?? "";
+  const linkUrl = markdown.match(/\*\*Facebook:\*\*\s*(https?:\/\/\S+)/i)?.[1]?.trim() ?? "";
+
+  if (!name && !phone && !email && !linkUrl) {
+    return [];
+  }
+
+  return [
+    {
+      _key: randomUUID(),
+      _type: "object",
+      name,
+      role: "Klubbleiar",
+      phone,
+      email,
+      linkLabel: linkUrl ? "Facebook-side" : "",
+      linkUrl,
+    },
+  ];
+}
+
+function extractDocuments(markdown) {
+  return markdown
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line.startsWith("- "))
+    .map((line) => line.replace(/^- /, ""))
+    .map((line) => {
+      const match = line.match(/\*\*(.+?)\*\*.*?(https?:\/\/\S+)/);
+      if (!match) {
+        return null;
+      }
+
+      const title = match[1].trim();
+      const year = title.match(/\b(19|20)\d{2}\b/)?.[0];
+
+      return {
+        _key: randomUUID(),
+        _type: "object",
+        title,
+        ...(year ? { year: Number(year) } : {}),
+        url: match[2].trim(),
+      };
+    })
+    .filter(Boolean);
+}
+
+function stripMarkdownSections(markdown, headings) {
+  const lines = markdown.split("\n");
+  const result = [];
+  let skipping = false;
+
+  for (const line of lines) {
+    const heading = line.match(/^##\s+(.*)$/)?.[1]?.trim();
+    if (heading && headings.includes(heading)) {
+      skipping = true;
+      continue;
+    }
+
+    if (skipping && /^##\s+/.test(line)) {
+      skipping = false;
+    }
+
+    if (!skipping) {
+      result.push(line);
+    }
+  }
+
+  return result.join("\n").trim();
+}
+
+function structuredKeyValue(label, value) {
+  return {
+    _key: randomUUID(),
+    _type: "object",
+    label,
+    value,
+  };
+}
+
+function structuredMilestone(year, title, text = "") {
+  return {
+    _key: randomUUID(),
+    _type: "object",
+    year,
+    title,
+    text,
+  };
 }
 
 async function parseMarkdownFile(filePath) {

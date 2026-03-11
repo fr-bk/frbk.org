@@ -12,6 +12,8 @@
 
   const saved = localStorage.getItem(STORAGE_KEY);
   apply(saved);
+  const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  const initialDark = saved === "dark" || (!saved && systemDark);
 
   document.addEventListener("click", (e) => {
     const btn = e.target.closest(".theme-toggle");
@@ -34,6 +36,11 @@
   const nav = document.querySelector(".site-nav");
   const menuBtn = document.querySelector(".menu-toggle");
   const navLinks = document.querySelector(".nav-links");
+  const themeBtn = document.querySelector(".theme-toggle");
+
+  if (themeBtn) {
+    themeBtn.setAttribute("aria-pressed", String(initialDark));
+  }
 
   if (nav && menuBtn && navLinks) {
     menuBtn.addEventListener("click", () => {

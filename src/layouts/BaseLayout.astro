@@ -3,7 +3,7 @@ import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import { VisualEditing } from "@sanity/astro/visual-editing";
 import { loadQuery, presentationEnabled } from "../lib/sanity.js";
-import { navigationPagesQuery } from "../lib/queries.js";
+import { navigationPagesQuery, globalConfigQuery } from "../lib/queries.js";
 
 const {
   title,
@@ -14,7 +14,11 @@ const {
   isHome = false,
 } = Astro.props;
 
-const navigationPages = await loadQuery(navigationPagesQuery);
+const [navigationPages, globalConfig] = await Promise.all([
+  loadQuery(navigationPagesQuery),
+  loadQuery(globalConfigQuery),
+]);
+const facebookUrl = globalConfig?.facebookUrl ?? null;
 
 const siteTitle = "Fiksdal/Rekdal ballklubb";
 const pageTitle = title ? `${title} | ${siteTitle}` : siteTitle;
@@ -27,7 +31,7 @@ const ogImageUrl = ogImage ?? new URL("/img/hero-fotballbane.jpg", siteUrl).href
 ---
 
 <!doctype html>
-<html lang="nb" data-theme="">
+<html lang="nb" data-theme="" class="no-js">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -47,6 +51,8 @@ const ogImageUrl = ogImage ?? new URL("/img/hero-fotballbane.jpg", siteUrl).href
     <!-- Unngå flash av feil tema ved sidelasting -->
     <script is:inline>
       (function () {
+        document.documentElement.classList.remove("no-js");
+        document.documentElement.classList.add("js");
         var t = localStorage.getItem("frbk-theme");
         if (t === "light" || t === "dark") {
           document.documentElement.setAttribute("data-theme", t);
@@ -54,7 +60,8 @@ const ogImageUrl = ogImage ?? new URL("/img/hero-fotballbane.jpg", siteUrl).href
       })();
     </script>
     <link rel="preconnect" href="https://unpkg.com" />
-    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css" />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2.1.1/css/pico.min.css" />
     <link rel="stylesheet" href="/css/custom.css" />
   </head>
   <body>
@@ -65,7 +72,7 @@ const ogImageUrl = ogImage ?? new URL("/img/hero-fotballbane.jpg", siteUrl).href
           class="masthead masthead--hero"
           style={`--masthead-image: url('${heroImage}'); --masthead-position: ${heroPosition};`}
         >
-          <Header navigationPages={navigationPages} />
+          <Header navigationPages={navigationPages} facebookUrl={facebookUrl} />
           <div class="container masthead__content">
             <slot name="hero" />
           </div>
@@ -75,7 +82,7 @@ const ogImageUrl = ogImage ?? new URL("/img/hero-fotballbane.jpg", siteUrl).href
           class="masthead"
           style={`--masthead-image: url('${heroImage}'); --masthead-position: ${heroPosition};`}
         >
-          <Header navigationPages={navigationPages} />
+          <Header navigationPages={navigationPages} facebookUrl={facebookUrl} />
         </section>
       )
     }

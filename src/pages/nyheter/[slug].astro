@@ -33,7 +33,8 @@ const ogImage = nyhet?.ogImageRef
 >
   {nyhet ? (
     <article class="prose">
-      <header class="article-header">
+      <header class="article-header article-header--feature">
+        <div class="page-header__meta">Klubbnytt</div>
         <time class="article-date" datetime={nyhet.publishedAt}>
           {new Date(nyhet.publishedAt).toLocaleDateString("nb-NO", {
             day: "2-digit",
@@ -44,7 +45,7 @@ const ogImage = nyhet?.ogImageRef
         <h1 class="article-title">{nyhet.title}</h1>
         {nyhet.summary && <p class="article-lead">{nyhet.summary}</p>}
       </header>
-      {nyhet.body && <div class="prose__body"><PortableText value={nyhet.body} /></div>}
+      {nyhet.body && <div class="prose__body prose__body--surface"><PortableText value={nyhet.body} /></div>}
     </article>
   ) : (
     <article class="prose">
@@ -52,5 +53,5 @@ const ogImage = nyhet?.ogImageRef
       <p>Vi fann ikkje nyheita du prøvde å opne.</p>
     </article>
   )}
-  <a href="/nyheter/" class="back-link">← Alle nyheter</a>
+  <a href="/nyheter/" class="back-link">← Alle nyheiter</a>
 </BaseLayout>

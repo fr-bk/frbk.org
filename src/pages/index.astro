@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { loadQuery, urlFor } from "../lib/sanity.js";
-import { allNyheterQuery, hjemmesideQuery } from "../lib/queries.js";
+import { allNyheterQuery, hjemmesideQuery, navigationPagesQuery } from "../lib/queries.js";
 
 const FOTBALL_URL =
   "https://www.fotball.no/fotballdata/klubb/hjem/?fiksId=1064&underside=kamper";
@@ -11,9 +11,10 @@ const ICS_URL =
   "https://www.fotball.no/footballapi/Calendar/GetCalendarForClub?clubId=1064";
 
 // Hent framsidedata og nyheter frå Sanity
-const [hjemmeside, alleNyheter] = await Promise.all([
+const [hjemmeside, alleNyheter, navigationPages] = await Promise.all([
   loadQuery(hjemmesideQuery),
   loadQuery(allNyheterQuery),
+  loadQuery(navigationPagesQuery),
 ]);
 
 const sisteNyheter = alleNyheter.slice(0, 5);
@@ -41,24 +42,38 @@ const heroLead =
 const heroActions = hjemmeside?.heroActions?.length
   ? hjemmeside.heroActions
   : [
-      { label: "Siste nytt", href: "/nyheter/", variant: "primary" },
+      { label: "Kampar", href: "#kampar", variant: "primary" },
       { label: "Bli med", href: "/kontakt/", variant: "secondary" },
     ];
 const newsSectionTitle = hjemmeside?.newsSectionTitle ?? "Siste nyheter";
 const matchesSectionTitle = hjemmeside?.matchesSectionTitle ?? "Kamper";
-const badges = hjemmeside?.badges?.length
-  ? hjemmeside.badges
-  : [
-      { title: "Fair Play", text: "Respekt · inkludering · glede" },
-      { title: "Kvalitetsklubb", text: "NFF-sertifisering" },
-      { title: "Dugnad", text: "Vi bygger klubb saman" },
-    ];
+const featuredNews = sisteNyheter[0] ?? null;
+const remainingNews = sisteNyheter.slice(1);
+
+const quickLinkDescriptions = {
+  "om-klubben": "Historie, klubbfakta og kvar vi vil vidare.",
+  "fair-play": "Verdigrunnlag og forventningar til miljøet rundt laga.",
+  kontakt: "Kontaktpersonar og enkle vegar inn i klubben.",
+  dokumenter: "Årsmelding, klubbhandbok og andre viktige dokument.",
+};
+
+const quickLinks = navigationPages
+  .map((page) => ({
+    ...page,
+    description:
+      quickLinkDescriptions[page.slug] ?? "Meir informasjon om klubben og aktiviteten vår.",
+  }));
+
+function sponsorHref(sponsor) {
+  return typeof sponsor?.url === "string" && sponsor.url.trim() ? sponsor.url.trim() : null;
+}
 ---
 
 <BaseLayout isHome={true} heroImage={heroImage} heroPosition={heroPosition} description={pageDescription} ogImage={ogImage}>
   <section class="hero-card hero-card--overlay" slot="hero">
     <div class="hero-card__grid hero-card__grid--single">
       <div class="hero-card__text">
+        <div class="hero-card__eyebrow">Sidan 1979 · Fiksdal og Rekdal</div>
         <h1>{heroTitle}</h1>
         <p class="lead">{heroLead}</p>
         <div class="hero__actions">
@@ -76,18 +91,48 @@ const badges = hjemmeside?.badges?.length
     </div>
   </section>
 
-  <!-- HOVUDGRID -->
-  <section class="home-grid">
-    <!-- NYHETER -->
-    <article class="card">
+  <section class="section-intro">
+    <div>
+      <span class="section-intro__eyebrow">Klubbliv</span>
+      <h2>{newsSectionTitle}</h2>
+    </div>
+    <a href="/nyheter/" class="section-intro__link">Sjå alle nyheiter</a>
+  </section>
+
+  <section class="news-showcase">
+    {
+      featuredNews ? (
+        <a class="news-feature" href={`/nyheter/${featuredNews.slug}/`}>
+          <div class="news-feature__meta">
+            <span class="news-feature__tag">Siste nytt</span>
+            <time datetime={featuredNews.publishedAt}>
+              {new Date(featuredNews.publishedAt).toLocaleDateString("nb-NO", {
+                day: "2-digit",
+                month: "long",
+                year: "numeric",
+              })}
+            </time>
+          </div>
+          <h3>{featuredNews.title}</h3>
+          {featuredNews.summary && <p>{featuredNews.summary}</p>}
+          <span class="news-feature__cta">Les saka</span>
+        </a>
+      ) : (
+        <div class="empty-state">
+          <p>Ingen nyheiter enda.</p>
+        </div>
+      )
+    }
+
+    <article class="card card--newslist">
       <header class="card__header">
-        <h2>{newsSectionTitle}</h2>
-        <a href="/nyheter/">Alle</a>
+        <h3>Fleire nyheiter</h3>
+        <a href="/nyheter/">Arkiv</a>
       </header>
       {
-        sisteNyheter.length > 0 ? (
+        remainingNews.length > 0 ? (
           <div class="list">
-            {sisteNyheter.map((n) => (
+            {remainingNews.map((n) => (
               <a class="list__item" href={`/nyheter/${n.slug}/`}>
                 <div class="list__title">{n.title}</div>
                 <div class="list__meta">
@@ -101,15 +146,19 @@ const badges = hjemmeside?.badges?.length
             ))}
           </div>
         ) : (
-          <p>Ingen nyheiter enda.</p>
+          <p>Fleire nyheiter kjem snart.</p>
         )
       }
     </article>
+  </section>
 
-    <!-- KAMPER -->
-    <article class="card">
+  <section class="home-grid">
+    <article class="card card--matches" id="kampar">
       <header class="card__header">
-        <h2>{matchesSectionTitle}</h2>
+        <div>
+          <span class="card__eyebrow">Kampkalender</span>
+          <h2>{matchesSectionTitle}</h2>
+        </div>
         <a href={FOTBALL_URL}>Alle</a>
       </header>
       {
@@ -145,16 +194,23 @@ const badges = hjemmeside?.badges?.length
         >
       </div>
     </article>
-  </section>
 
-  <!-- MERKER -->
-  <section class="badges">
-    {badges.map((badge) => (
-      <article class="badge">
-        <strong>{badge.title}</strong>
-        <span>{badge.text}</span>
-      </article>
-    ))}
+    <article class="card card--quicklinks">
+      <header class="card__header">
+        <div>
+          <span class="card__eyebrow">Klubben</span>
+          <h2>Praktisk informasjon</h2>
+        </div>
+      </header>
+      <div class="quick-links">
+        {quickLinks.map((page) => (
+          <a class="quick-link-card" href={`/${page.slug}/`}>
+            <h3>{page.navigationTitle ?? page.title}</h3>
+            <p>{page.description}</p>
+          </a>
+        ))}
+      </div>
+    </article>
   </section>
 
   <!-- SPONSORAR -->
@@ -163,16 +219,29 @@ const badges = hjemmeside?.badges?.length
       <section class="sponsors">
         <h2>Sponsorer</h2>
         <div class="sponsors__grid">
-          {hjemmeside.sponsors.map((s) => (
-            <a class="sponsor-card" href={s.url ?? "#"} aria-label={s.name}>
-              {s.logoRef && (
-                <img
-                  src={urlFor(s.logoRef).height(80).url()}
-                  alt={s.name}
-                />
-              )}
-            </a>
-          ))}
+          {hjemmeside.sponsors.map((s) => {
+            const href = sponsorHref(s);
+            const content = (
+              <>
+                {s.logoRef && (
+                  <img
+                    src={urlFor(s.logoRef).height(80).url()}
+                    alt={s.name}
+                  />
+                )}
+              </>
+            );
+
+            return href ? (
+              <a class="sponsor-card" href={href} aria-label={s.name}>
+                {content}
+              </a>
+            ) : (
+              <div class="sponsor-card sponsor-card--static" aria-label={s.name}>
+                {content}
+              </div>
+            );
+          })}
         </div>
       </section>
     )
