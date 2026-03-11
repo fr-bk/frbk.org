@@ -2,49 +2,53 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { PortableText } from "astro-portabletext";
 import { sanityClient, urlFor } from "../../lib/sanity.js";
-import { allNyheterQuery, nyhetBySlugQuery } from "../../lib/queries.js";
-
-export async function getStaticPaths() {
-  const alleNyheter = await sanityClient.fetch(allNyheterQuery);
-  return alleNyheter.map((n) => ({
-    params: { slug: n.slug },
-  }));
-}
+import { nyhetBySlugQuery } from "../../lib/queries.js";
 
 const { slug } = Astro.params;
 const nyhet = await sanityClient.fetch(nyhetBySlugQuery, { slug });
 
 if (!nyhet) {
-  return Astro.redirect("/nyheter/");
+  Astro.response.status = 404;
 }
 
-const heroImage = nyhet.heroImageRef
+const heroImage = nyhet?.heroImageRef
   ? urlFor(nyhet.heroImageRef).width(1600).url()
   : "/img/hero-fotballbane.jpg";
 
-const heroPosition = nyhet.heroPosition ?? "center";
+const heroPosition = nyhet?.heroPosition ?? "center";
 ---
 
 <BaseLayout
-  title={nyhet.title}
+  title={nyhet?.title ?? "Nyheita finst ikkje"}
   heroImage={heroImage}
   heroPosition={heroPosition}
 >
   <article class="prose">
-    <header class="article-header">
-      <h1>{nyhet.title}</h1>
-      {nyhet.summary && <p class="lead">{nyhet.summary}</p>}
-      <p class="article-meta">
-        {
-          new Date(nyhet.publishedAt).toLocaleDateString("nb-NO", {
-            day: "2-digit",
-            month: "long",
-            year: "numeric",
-          })
-        }
-      </p>
-    </header>
-    {nyhet.body && <PortableText value={nyhet.body} />}
+    {
+      nyhet ? (
+        <>
+          <header class="article-header">
+            <h1>{nyhet.title}</h1>
+            {nyhet.summary && <p class="lead">{nyhet.summary}</p>}
+            <p class="article-meta">
+              {
+                new Date(nyhet.publishedAt).toLocaleDateString("nb-NO", {
+                  day: "2-digit",
+                  month: "long",
+                  year: "numeric",
+                })
+              }
+            </p>
+          </header>
+          {nyhet.body && <PortableText value={nyhet.body} />}
+        </>
+      ) : (
+        <>
+          <h1>Nyheita finst ikkje</h1>
+          <p>Vi fann ikkje nyheita du prøvde å opne.</p>
+        </>
+      )
+    }
   </article>
   <a href="/nyheter/" class="back-link">← Alle nyheter</a>
 </BaseLayout>

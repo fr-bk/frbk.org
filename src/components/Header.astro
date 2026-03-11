@@ -1,3 +1,7 @@
+---
+const { navigationPages = [] } = Astro.props;
+---
+
 <header class="container">
   <nav class="site-nav" aria-label="Hovedmeny">
     <ul class="nav-brand">
@@ -17,10 +21,9 @@
     <ul id="site-nav-links" class="nav-links">
       <li><a href="/">Hjem</a></li>
       <li><a href="/nyheter/">Nyheter</a></li>
-      <li><a href="/om-klubben/">Om klubben</a></li>
-      <li><a href="/fair-play/">Fair Play</a></li>
-      <li><a href="/dokumenter/">Dokumenter</a></li>
-      <li><a href="/kontakt/">Kontakt</a></li>
+      {navigationPages.map((page) => (
+        <li><a href={`/${page.slug}/`}>{page.navigationTitle ?? page.title}</a></li>
+      ))}
       <li>
         <button class="theme-toggle" type="button" aria-label="Bytt tema" title="Bytt tema">
           <svg class="theme-icon theme-icon--sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false">

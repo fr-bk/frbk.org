@@ -36,6 +36,21 @@ const heroTitle = hjemmeside?.heroTitle ?? "Fiksdal/Rekdal ballklubb";
 const heroLead =
   hjemmeside?.heroLead ??
   "Ein inkluderande fotballklubb for barn, unge og vaksne.";
+const heroActions = hjemmeside?.heroActions?.length
+  ? hjemmeside.heroActions
+  : [
+      { label: "Siste nytt", href: "/nyheter/", variant: "primary" },
+      { label: "Bli med", href: "/kontakt/", variant: "secondary" },
+    ];
+const newsSectionTitle = hjemmeside?.newsSectionTitle ?? "Siste nyheter";
+const matchesSectionTitle = hjemmeside?.matchesSectionTitle ?? "Kamper";
+const badges = hjemmeside?.badges?.length
+  ? hjemmeside.badges
+  : [
+      { title: "Fair Play", text: "Respekt · inkludering · glede" },
+      { title: "Kvalitetsklubb", text: "NFF-sertifisering" },
+      { title: "Dugnad", text: "Vi bygger klubb saman" },
+    ];
 ---
 
 <BaseLayout isHome={true} heroImage={heroImage} heroPosition={heroPosition}>
@@ -45,8 +60,15 @@ const heroLead =
         <h1>{heroTitle}</h1>
         <p class="lead">{heroLead}</p>
         <div class="hero__actions">
-          <a href="/nyheter/" role="button">Siste nytt</a>
-          <a href="/kontakt/" role="button" class="secondary">Bli med</a>
+          {heroActions.map((action) => (
+            <a
+              href={action.href}
+              role="button"
+              class={action.variant === "secondary" ? "secondary" : undefined}
+            >
+              {action.label}
+            </a>
+          ))}
         </div>
       </div>
     </div>
@@ -57,7 +79,7 @@ const heroLead =
     <!-- NYHETER -->
     <article class="card">
       <header class="card__header">
-        <h2>Siste nyheter</h2>
+        <h2>{newsSectionTitle}</h2>
         <a href="/nyheter/">Alle</a>
       </header>
       {
@@ -85,7 +107,7 @@ const heroLead =
     <!-- KAMPER -->
     <article class="card">
       <header class="card__header">
-        <h2>Kamper</h2>
+        <h2>{matchesSectionTitle}</h2>
         <a href={FOTBALL_URL}>Alle</a>
       </header>
       {
@@ -125,18 +147,12 @@ const heroLead =
 
   <!-- MERKER -->
   <section class="badges">
-    <article class="badge">
-      <strong>Fair Play</strong>
-      <span>Respekt · inkludering · glede</span>
-    </article>
-    <article class="badge">
-      <strong>Kvalitetsklubb</strong>
-      <span>NFF-sertifisering</span>
-    </article>
-    <article class="badge">
-      <strong>Dugnad</strong>
-      <span>Vi bygger klubb saman</span>
-    </article>
+    {badges.map((badge) => (
+      <article class="badge">
+        <strong>{badge.title}</strong>
+        <span>{badge.text}</span>
+      </article>
+    ))}
   </section>
 
   <!-- SPONSORAR -->

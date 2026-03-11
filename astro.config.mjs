@@ -7,7 +7,7 @@ import sanity from "@sanity/astro";
 const env = loadEnv(process.env.NODE_ENV ?? "development", process.cwd(), "");
 
 export default defineConfig({
-  output: "static",
+  output: "server",
   adapter: netlify(),
   site: "https://frbk.org",
   integrations: [

@@ -17,10 +17,11 @@ export const nyhetBySlugQuery = `*[_type == "nyhet" && slug.current == $slug][0]
   "heroImageRef": heroImage
 }`;
 
-/** Alle sider (for getStaticPaths) */
-export const allSiderQuery = `*[_type == "side"] {
+/** Sider som skal visast i hovedmenyen */
+export const navigationPagesQuery = `*[_type == "side" && coalesce(showInNavigation, true)] | order(coalesce(navigationOrder, 100) asc, title asc) {
   title,
-  "slug": slug.current
+  "slug": slug.current,
+  navigationTitle
 }`;
 
 /** Enkelt side etter slug */
@@ -38,6 +39,17 @@ export const hjemmesideQuery = `*[_type == "hjemmeside" && _id == "hjemmeside-si
   heroLead,
   "heroImageRef": heroImage,
   heroPosition,
+  heroActions[] {
+    label,
+    href,
+    variant
+  },
+  newsSectionTitle,
+  matchesSectionTitle,
+  badges[] {
+    title,
+    text
+  },
   sponsors[] {
     name,
     url,

@@ -31,6 +31,25 @@ export default {
       options: { hotspot: true },
     },
     {
+      name: "showInNavigation",
+      title: "Vis i hovedmeny",
+      type: "boolean",
+      initialValue: true,
+    },
+    {
+      name: "navigationTitle",
+      title: "Menytittel",
+      type: "string",
+      description: "Valfri kort tittel i menyen. Bruker sidetittel om tom.",
+    },
+    {
+      name: "navigationOrder",
+      title: "Menyrekkefølge",
+      type: "number",
+      description: "Lavere tall vises først i hovedmenyen.",
+      initialValue: 100,
+    },
+    {
       name: "heroPosition",
       title: "Bileteposisjon",
       type: "string",
@@ -53,9 +72,17 @@ export default {
     },
   ],
   preview: {
-    select: { title: "title", slug: "slug.current" },
-    prepare({ title, slug }) {
-      return { title, subtitle: slug ? `/${slug}/` : "" };
+    select: {
+      title: "title",
+      navTitle: "navigationTitle",
+      slug: "slug.current",
+      hidden: "showInNavigation",
+    },
+    prepare({ title, navTitle, slug, hidden }) {
+      return {
+        title,
+        subtitle: `${slug ? `/${slug}/` : ""}${hidden === false ? " · skjult frå meny" : navTitle ? ` · ${navTitle}` : ""}`,
+      };
     },
   },
 };

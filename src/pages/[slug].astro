@@ -2,36 +2,40 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { PortableText } from "astro-portabletext";
 import { sanityClient, urlFor } from "../lib/sanity.js";
-import { allSiderQuery, sideBySlugQuery } from "../lib/queries.js";
-
-export async function getStaticPaths() {
-  const alleSider = await sanityClient.fetch(allSiderQuery);
-  return alleSider.map((s) => ({
-    params: { slug: s.slug },
-  }));
-}
+import { sideBySlugQuery } from "../lib/queries.js";
 
 const { slug } = Astro.params;
 const side = await sanityClient.fetch(sideBySlugQuery, { slug });
 
 if (!side) {
-  return Astro.redirect("/");
+  Astro.response.status = 404;
 }
 
-const heroImage = side.heroImageRef
+const heroImage = side?.heroImageRef
   ? urlFor(side.heroImageRef).width(1600).url()
   : "/img/hero-fotballbane.jpg";
 
-const heroPosition = side.heroPosition ?? "center";
+const heroPosition = side?.heroPosition ?? "center";
 ---
 
 <BaseLayout
-  title={side.title}
+  title={side?.title ?? "Sida finst ikkje"}
   heroImage={heroImage}
   heroPosition={heroPosition}
 >
   <article class="prose">
-    <h1>{side.title}</h1>
-    {side.body && <PortableText value={side.body} />}
+    {
+      side ? (
+        <>
+          <h1>{side.title}</h1>
+          {side.body && <PortableText value={side.body} />}
+        </>
+      ) : (
+        <>
+          <h1>Sida finst ikkje</h1>
+          <p>Vi fann ikkje sida du prøvde å opne.</p>
+        </>
+      )
+    }
   </article>
 </BaseLayout>
