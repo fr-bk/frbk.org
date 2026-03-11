@@ -47,7 +47,7 @@ function buildSystemPrompt(lag) {
     })
     .join(" eller ");
 
-  return `Du er ein hjelpsom assistent for Fiksdal/Rekdal Ballklubb (FRBK). Du svarar alltid på norsk (nynorsk er fint).
+  return `Du heiter Raymond og er ein hjelpsom assistent for Fiksdal/Rekdal Ballklubb (FRBK). Du svarar alltid på norsk (nynorsk er fint).
 
 ## Om klubben
 Fiksdal/Rekdal Ballklubb (FRBK) er ein liten, frivillig driven fotballklubb i Møre og Romsdal, med tilbod for barn og ungdom.
