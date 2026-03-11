@@ -42,11 +42,17 @@
     win.innerHTML =
       '<div class="frbk-chat__header">' +
       '<span class="frbk-chat__title">Raymond</span>' +
+      '<div class="frbk-chat__header-actions">' +
+      '<button class="frbk-chat__new" aria-label="Start ny samtale" title="Ny samtale">↺</button>' +
       '<button class="frbk-chat__close" aria-label="Lukk chat">✕</button>' +
       "</div>" +
-      '<div class="frbk-chat__messages" id="frbk-messages"></div>' +
+      "</div>" +
+      '<div class="frbk-chat__messages" id="frbk-messages" aria-live="polite" aria-relevant="additions" aria-label="Chat-meldingar"></div>' +
       '<div class="frbk-chat__footer">' +
-      '<input class="frbk-chat__input" type="text" placeholder="Skriv ein melding…" aria-label="Melding til Raymonden" maxlength="300">' +
+      '<div class="frbk-chat__input-wrap">' +
+      '<input class="frbk-chat__input" type="text" placeholder="Skriv ein melding…" aria-label="Melding til Raymond" maxlength="300">' +
+      '<span class="frbk-chat__counter" aria-live="polite" aria-atomic="true">0/300</span>' +
+      "</div>" +
       '<button class="frbk-chat__send" aria-label="Send melding">' +
       '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"><path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471z"/></svg>' +
       "</button>" +
@@ -60,6 +66,8 @@
     var input = win.querySelector(".frbk-chat__input");
     var sendBtn = win.querySelector(".frbk-chat__send");
     var closeBtn = win.querySelector(".frbk-chat__close");
+    var newBtn = win.querySelector(".frbk-chat__new");
+    var counter = win.querySelector(".frbk-chat__counter");
 
     messages = loadHistory();
     if (messages.length === 0) {
@@ -77,8 +85,19 @@
     closeBtn.addEventListener("click", function () {
       setOpen(false, win, btn);
     });
+    newBtn.addEventListener("click", function () {
+      messages = [];
+      saveHistory();
+      msgsEl.innerHTML = "";
+      appendMsg("assistant", WELCOME, msgsEl);
+    });
     sendBtn.addEventListener("click", function () {
       send(input, msgsEl);
+    });
+    input.addEventListener("input", function () {
+      var len = input.value.length;
+      counter.textContent = len + "/300";
+      counter.style.color = len >= 270 ? "#c0392b" : "";
     });
     input.addEventListener("keydown", function (e) {
       if (e.key === "Enter" && !e.shiftKey) {

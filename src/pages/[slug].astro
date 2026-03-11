@@ -16,26 +16,34 @@ const heroImage = side?.heroImageRef
   : "/img/hero-fotballbane.jpg";
 
 const heroPosition = side?.heroPosition ?? "center";
+const pageDescription = side?.metaDescription || null;
+const ogImage = side?.ogImageRef
+  ? urlFor(side.ogImageRef).width(1200).height(630).url()
+  : side?.heroImageRef
+  ? urlFor(side.heroImageRef).width(1200).height(630).url()
+  : null;
 ---
 
 <BaseLayout
   title={side?.title ?? "Sida finst ikkje"}
   heroImage={heroImage}
   heroPosition={heroPosition}
+  description={pageDescription}
+  ogImage={ogImage}
 >
   <article class="prose">
-    {
-      side ? (
-        <>
+    {side ? (
+      <>
+        <div class="page-header">
           <h1>{side.title}</h1>
-          {side.body && <PortableText value={side.body} />}
-        </>
-      ) : (
-        <>
-          <h1>Sida finst ikkje</h1>
-          <p>Vi fann ikkje sida du prøvde å opne.</p>
-        </>
-      )
-    }
+        </div>
+        {side.body && <div class="prose__body"><PortableText value={side.body} /></div>}
+      </>
+    ) : (
+      <>
+        <h1>Sida finst ikkje</h1>
+        <p>Vi fann ikkje sida du prøvde å opne.</p>
+      </>
+    )}
   </article>
 </BaseLayout>

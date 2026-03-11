@@ -7,6 +7,8 @@ import { navigationPagesQuery } from "../lib/queries.js";
 
 const {
   title,
+  description,
+  ogImage,
   heroImage = "/img/hero-fotballbane.jpg",
   heroPosition = "center",
   isHome = false,
@@ -16,6 +18,12 @@ const navigationPages = await loadQuery(navigationPagesQuery);
 
 const siteTitle = "Fiksdal/Rekdal ballklubb";
 const pageTitle = title ? `${title} | ${siteTitle}` : siteTitle;
+const pageDescription =
+  description ??
+  "Fotballglede for alle sidan 1979 – ein inkluderande fotballklubb i Møre og Romsdal.";
+const siteUrl = Astro.site ?? "https://frbk.org";
+const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
+const ogImageUrl = ogImage ?? new URL("/img/hero-fotballbane.jpg", siteUrl).href;
 ---
 
 <!doctype html>
@@ -24,7 +32,18 @@ const pageTitle = title ? `${title} | ${siteTitle}` : siteTitle;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{pageTitle}</title>
-    <meta name="description" content="Fotballglede for alle sidan 1979" />
+    <meta name="description" content={pageDescription} />
+    <link rel="canonical" href={canonicalUrl} />
+
+    <!-- Open Graph / sosiale medium -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={siteTitle} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta name="twitter:card" content="summary_large_image" />
+
     <!-- Unngå flash av feil tema ved sidelasting -->
     <script is:inline>
       (function () {
@@ -34,10 +53,12 @@ const pageTitle = title ? `${title} | ${siteTitle}` : siteTitle;
         }
       })();
     </script>
+    <link rel="preconnect" href="https://unpkg.com" />
     <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css" />
     <link rel="stylesheet" href="/css/custom.css" />
   </head>
   <body>
+    <a href="#main-content" class="skip-link">Hopp til innhald</a>
     {
       isHome ? (
         <section
@@ -58,7 +79,7 @@ const pageTitle = title ? `${title} | ${siteTitle}` : siteTitle;
         </section>
       )
     }
-    <main class="container">
+    <main class="container" id="main-content" tabindex="-1">
       <slot />
     </main>
     <Footer />

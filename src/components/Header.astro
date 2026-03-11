@@ -1,5 +1,6 @@
 ---
 const { navigationPages = [] } = Astro.props;
+const { pathname } = Astro.url;
 ---
 
 <header class="container">
@@ -14,10 +15,10 @@ const { navigationPages = [] } = Astro.props;
       </li>
     </ul>
     <ul id="site-nav-links" class="nav-links">
-      <li><a href="/">Hjem</a></li>
-      <li><a href="/nyheter/">Nyheter</a></li>
+      <li><a href="/" aria-current={pathname === "/" ? "page" : undefined}>Hjem</a></li>
+      <li><a href="/nyheter/" aria-current={pathname.startsWith("/nyheter") ? "page" : undefined}>Nyheter</a></li>
       {navigationPages.map((page) => (
-        <li><a href={`/${page.slug}/`}>{page.navigationTitle ?? page.title}</a></li>
+        <li><a href={`/${page.slug}/`} aria-current={pathname === `/${page.slug}/` ? "page" : undefined}>{page.navigationTitle ?? page.title}</a></li>
       ))}
     </ul>
     <div class="nav-actions">

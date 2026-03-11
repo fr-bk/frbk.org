@@ -16,39 +16,41 @@ const heroImage = nyhet?.heroImageRef
   : "/img/hero-fotballbane.jpg";
 
 const heroPosition = nyhet?.heroPosition ?? "center";
+const pageDescription = nyhet?.metaDescription || nyhet?.summary || null;
+const ogImage = nyhet?.ogImageRef
+  ? urlFor(nyhet.ogImageRef).width(1200).height(630).url()
+  : nyhet?.heroImageRef
+  ? urlFor(nyhet.heroImageRef).width(1200).height(630).url()
+  : null;
 ---
 
 <BaseLayout
   title={nyhet?.title ?? "Nyheita finst ikkje"}
   heroImage={heroImage}
   heroPosition={heroPosition}
+  description={pageDescription}
+  ogImage={ogImage}
 >
-  <article class="prose">
-    {
-      nyhet ? (
-        <>
-          <header class="article-header">
-            <h1>{nyhet.title}</h1>
-            {nyhet.summary && <p class="lead">{nyhet.summary}</p>}
-            <p class="article-meta">
-              {
-                new Date(nyhet.publishedAt).toLocaleDateString("nb-NO", {
-                  day: "2-digit",
-                  month: "long",
-                  year: "numeric",
-                })
-              }
-            </p>
-          </header>
-          {nyhet.body && <PortableText value={nyhet.body} />}
-        </>
-      ) : (
-        <>
-          <h1>Nyheita finst ikkje</h1>
-          <p>Vi fann ikkje nyheita du prøvde å opne.</p>
-        </>
-      )
-    }
-  </article>
+  {nyhet ? (
+    <article class="prose">
+      <header class="article-header">
+        <time class="article-date" datetime={nyhet.publishedAt}>
+          {new Date(nyhet.publishedAt).toLocaleDateString("nb-NO", {
+            day: "2-digit",
+            month: "long",
+            year: "numeric",
+          })}
+        </time>
+        <h1 class="article-title">{nyhet.title}</h1>
+        {nyhet.summary && <p class="article-lead">{nyhet.summary}</p>}
+      </header>
+      {nyhet.body && <div class="prose__body"><PortableText value={nyhet.body} /></div>}
+    </article>
+  ) : (
+    <article class="prose">
+      <h1>Nyheita finst ikkje</h1>
+      <p>Vi fann ikkje nyheita du prøvde å opne.</p>
+    </article>
+  )}
   <a href="/nyheter/" class="back-link">← Alle nyheter</a>
 </BaseLayout>

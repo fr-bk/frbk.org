@@ -9,6 +9,7 @@ export default {
     { name: "hero", title: "Toppfelt" },
     { name: "navigation", title: "Meny" },
     { name: "settings", title: "Innstillingar" },
+    { name: "seo", title: "SEO / Deling" },
   ],
   fields: [
     {
@@ -41,6 +42,18 @@ export default {
       description: "Valfritt bilete i toppen av sida.",
       group: "hero",
       options: { hotspot: true },
+      fields: [
+        {
+          name: "alt",
+          title: "Alt-tekst",
+          type: "string",
+          description: "Beskriv kva som er på biletet. Viktig for skjermlesarar og Google.",
+          validation: (Rule) =>
+            Rule.required().warning(
+              "Alt-tekst manglar – dette er viktig for tilgjengelegheit og SEO"
+            ),
+        },
+      ],
     },
     {
       name: "showInNavigation",
@@ -89,7 +102,43 @@ export default {
       type: "array",
       description: "Hovudinnhaldet på sida.",
       group: "content",
-      of: [{ type: "block" }, { type: "image", options: { hotspot: true } }],
+      of: [
+        { type: "block" },
+        {
+          type: "image",
+          options: { hotspot: true },
+          fields: [
+            {
+              name: "alt",
+              title: "Alt-tekst",
+              type: "string",
+              description: "Beskriv kva som er på biletet.",
+              validation: (Rule) =>
+                Rule.required().warning("Hugs å leggje til alt-tekst på alle bilete"),
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: "metaDescription",
+      title: "Metabeskriving",
+      type: "text",
+      rows: 2,
+      group: "seo",
+      description:
+        "Kort beskriving for Google og sosiale medium (120–160 teikn).",
+      validation: (Rule) =>
+        Rule.max(160).warning("Over 160 teikn – Google kutter teksten i søkeresultatet"),
+    },
+    {
+      name: "ogImage",
+      title: "Delingsbilete",
+      type: "image",
+      group: "seo",
+      description:
+        "Biletet som visast når sida delast på Facebook, Messenger osv. Fell tilbake på toppbiletet.",
+      options: { hotspot: true },
     },
   ],
   orderings: [

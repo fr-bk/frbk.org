@@ -2,12 +2,12 @@ export default {
   name: "hjemmeside",
   title: "Framside",
   type: "document",
-  // Singleton – tillét berre oppdatering og publisering, ikkje oppretting/sletting
   __experimental_actions: ["update", "publish"],
   groups: [
     { name: "hero", title: "Toppfelt", default: true },
     { name: "sections", title: "Seksjonar" },
     { name: "sponsors", title: "Sponsorar" },
+    { name: "seo", title: "SEO / Deling" },
   ],
   fields: [
     {
@@ -17,6 +17,16 @@ export default {
       description: "Stort bakgrunnsbilete øvst på framsida.",
       group: "hero",
       options: { hotspot: true },
+      fields: [
+        {
+          name: "alt",
+          title: "Alt-tekst",
+          type: "string",
+          description: "Beskriv kva som er på biletet. Viktig for skjermlesarar og Google.",
+          validation: (Rule) =>
+            Rule.required().warning("Alt-tekst manglar – dette er viktig for tilgjengelegheit og SEO"),
+        },
+      ],
     },
     {
       name: "heroPosition",
@@ -126,12 +136,19 @@ export default {
         {
           type: "object",
           fields: [
-            { name: "name", title: "Namn", type: "string" },
+            {
+              name: "name",
+              title: "Namn",
+              type: "string",
+              description: "Namnet på sponsoren. Brukast som alt-tekst på logoen.",
+              validation: (Rule) => Rule.required(),
+            },
             { name: "url", title: "Nettadresse", type: "url" },
             {
               name: "logo",
               title: "Logo",
               type: "image",
+              description: "Logoen til sponsoren. Alt-tekst vert henta frå 'Namn'-feltet over.",
               options: { hotspot: false },
             },
           ],
@@ -140,6 +157,26 @@ export default {
           },
         },
       ],
+    },
+    {
+      name: "metaDescription",
+      title: "Metabeskriving",
+      type: "text",
+      rows: 2,
+      group: "seo",
+      description:
+        "Kort beskriving for Google og sosiale medium (120–160 teikn). Fell tilbake på ingressen om tom.",
+      validation: (Rule) =>
+        Rule.max(160).warning("Over 160 teikn – Google kutter teksten i søkeresultatet"),
+    },
+    {
+      name: "ogImage",
+      title: "Delingsbilete",
+      type: "image",
+      group: "seo",
+      description:
+        "Biletet som visast når framsida delast på Facebook, Messenger osv. Fell tilbake på toppbiletet.",
+      options: { hotspot: true },
     },
   ],
   preview: {

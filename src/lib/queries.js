@@ -14,7 +14,9 @@ export const nyhetBySlugQuery = `*[_type == "nyhet" && slug.current == $slug][0]
   publishedAt,
   summary,
   body,
-  "heroImageRef": heroImage
+  "heroImageRef": heroImage,
+  metaDescription,
+  "ogImageRef": ogImage
 }`;
 
 /** Sider som skal visast i hovedmenyen */
@@ -30,7 +32,9 @@ export const sideBySlugQuery = `*[_type == "side" && slug.current == $slug][0] {
   "slug": slug.current,
   body,
   "heroImageRef": heroImage,
-  heroPosition
+  heroPosition,
+  metaDescription,
+  "ogImageRef": ogImage
 }`;
 
 /** Framsida-singleton */
@@ -54,5 +58,7 @@ export const hjemmesideQuery = `*[_type == "hjemmeside" && _id == "hjemmeside-si
     name,
     url,
     "logoRef": logo
-  }
+  },
+  metaDescription,
+  "ogImageRef": ogImage
 }`;

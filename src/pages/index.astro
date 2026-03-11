@@ -32,6 +32,8 @@ const heroImage = hjemmeside?.heroImageRef
   : "/img/hero-fotballbane.jpg";
 
 const heroPosition = hjemmeside?.heroPosition ?? "center";
+const pageDescription = hjemmeside?.metaDescription || hjemmeside?.heroLead || "Fotballglede for alle sidan 1979 – ein inkluderande fotballklubb i Møre og Romsdal.";
+const ogImage = hjemmeside?.ogImageRef ? urlFor(hjemmeside.ogImageRef).width(1200).height(630).url() : null;
 const heroTitle = hjemmeside?.heroTitle ?? "Fiksdal/Rekdal ballklubb";
 const heroLead =
   hjemmeside?.heroLead ??
@@ -53,7 +55,7 @@ const badges = hjemmeside?.badges?.length
     ];
 ---
 
-<BaseLayout isHome={true} heroImage={heroImage} heroPosition={heroPosition}>
+<BaseLayout isHome={true} heroImage={heroImage} heroPosition={heroPosition} description={pageDescription} ogImage={ogImage}>
   <section class="hero-card hero-card--overlay" slot="hero">
     <div class="hero-card__grid hero-card__grid--single">
       <div class="hero-card__text">
