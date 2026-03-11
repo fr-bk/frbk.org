@@ -1,0 +1,33 @@
+name: Fetch teams (fotball.no -> lag.json)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "45 4 * * 1" # Kvar måndag ca. 05:45 norsk tid
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Fetch lag frå fotball.no
+        run: node scripts/fetch-lag.mjs
+
+      - name: Commit viss endra
+        run: |
+          git config user.name "frbk-bot"
+          git config user.email "frbk-bot@users.noreply.github.com"
+          git add public/lag.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Update lag data"
+          git push

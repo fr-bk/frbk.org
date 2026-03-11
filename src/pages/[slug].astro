@@ -1,0 +1,37 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { PortableText } from "astro-portabletext";
+import { sanityClient, urlFor } from "../lib/sanity.js";
+import { allSiderQuery, sideBySlugQuery } from "../lib/queries.js";
+
+export async function getStaticPaths() {
+  const alleSider = await sanityClient.fetch(allSiderQuery);
+  return alleSider.map((s) => ({
+    params: { slug: s.slug },
+  }));
+}
+
+const { slug } = Astro.params;
+const side = await sanityClient.fetch(sideBySlugQuery, { slug });
+
+if (!side) {
+  return Astro.redirect("/");
+}
+
+const heroImage = side.heroImageRef
+  ? urlFor(side.heroImageRef).width(1600).url()
+  : "/img/hero-fotballbane.jpg";
+
+const heroPosition = side.heroPosition ?? "center";
+---
+
+<BaseLayout
+  title={side.title}
+  heroImage={heroImage}
+  heroPosition={heroPosition}
+>
+  <article class="prose">
+    <h1>{side.title}</h1>
+    {side.body && <PortableText value={side.body} />}
+  </article>
+</BaseLayout>

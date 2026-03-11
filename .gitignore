@@ -1,4 +1,8 @@
-/public/
+/dist/
 /resources/
+/node_modules/
+/.astro/
 .DS_Store
-EOF
+.env
+.env.local
+.netlify/

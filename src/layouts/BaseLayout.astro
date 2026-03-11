@@ -1,0 +1,63 @@
+---
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+
+const {
+  title,
+  heroImage = "/img/hero-fotballbane.jpg",
+  heroPosition = "center",
+  isHome = false,
+} = Astro.props;
+
+const siteTitle = "Fiksdal/Rekdal ballklubb";
+const pageTitle = title ? `${title} | ${siteTitle}` : siteTitle;
+---
+
+<!doctype html>
+<html lang="nb" data-theme="">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content="Fotballglede for alle sidan 1979" />
+    <!-- Unngå flash av feil tema ved sidelasting -->
+    <script is:inline>
+      (function () {
+        var t = localStorage.getItem("frbk-theme");
+        if (t === "light" || t === "dark") {
+          document.documentElement.setAttribute("data-theme", t);
+        }
+      })();
+    </script>
+    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css" />
+    <link rel="stylesheet" href="/css/custom.css" />
+  </head>
+  <body>
+    {
+      isHome ? (
+        <section
+          class="masthead masthead--hero"
+          style={`--masthead-image: url('${heroImage}'); --masthead-position: ${heroPosition};`}
+        >
+          <Header />
+          <div class="container masthead__content">
+            <slot name="hero" />
+          </div>
+        </section>
+      ) : (
+        <section
+          class="masthead"
+          style={`--masthead-image: url('${heroImage}'); --masthead-position: ${heroPosition};`}
+        >
+          <Header />
+        </section>
+      )
+    }
+    <main class="container">
+      <slot />
+    </main>
+    <Footer />
+    <script src="/js/theme.js" defer></script>
+    <script src="/js/chat.js" defer></script>
+  </body>
+</html>

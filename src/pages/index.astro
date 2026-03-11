@@ -1,0 +1,162 @@
+---
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { sanityClient, urlFor } from "../lib/sanity.js";
+import { allNyheterQuery, hjemmesideQuery } from "../lib/queries.js";
+
+const FOTBALL_URL =
+  "https://www.fotball.no/fotballdata/klubb/hjem/?fiksId=1064&underside=kamper";
+const ICS_URL =
+  "https://www.fotball.no/footballapi/Calendar/GetCalendarForClub?clubId=1064";
+
+// Hent framsidedata og nyheter frå Sanity
+const [hjemmeside, alleNyheter] = await Promise.all([
+  sanityClient.fetch(hjemmesideQuery),
+  sanityClient.fetch(allNyheterQuery),
+]);
+
+const sisteNyheter = alleNyheter.slice(0, 5);
+
+// Les kampar frå lokal JSON-fil (oppdaterast av GitHub Actions)
+let kamper = [];
+try {
+  const kamperPath = resolve("./data/kamper.json");
+  kamper = JSON.parse(readFileSync(kamperPath, "utf-8")).slice(0, 5);
+} catch {
+  // Fila finst ikkje enno – vis ingen kampar
+}
+
+const heroImage = hjemmeside?.heroImageRef
+  ? urlFor(hjemmeside.heroImageRef).width(1600).url()
+  : "/img/hero-fotballbane.jpg";
+
+const heroPosition = hjemmeside?.heroPosition ?? "center";
+const heroTitle = hjemmeside?.heroTitle ?? "Fiksdal/Rekdal ballklubb";
+const heroLead =
+  hjemmeside?.heroLead ??
+  "Ein inkluderande fotballklubb for barn, unge og vaksne.";
+---
+
+<BaseLayout isHome={true} heroImage={heroImage} heroPosition={heroPosition}>
+  <section class="hero-card hero-card--overlay" slot="hero">
+    <div class="hero-card__grid hero-card__grid--single">
+      <div class="hero-card__text">
+        <h1>{heroTitle}</h1>
+        <p class="lead">{heroLead}</p>
+        <div class="hero__actions">
+          <a href="/nyheter/" role="button">Siste nytt</a>
+          <a href="/kontakt/" role="button" class="secondary">Bli med</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOVUDGRID -->
+  <section class="home-grid">
+    <!-- NYHETER -->
+    <article class="card">
+      <header class="card__header">
+        <h2>Siste nyheter</h2>
+        <a href="/nyheter/">Alle</a>
+      </header>
+      {
+        sisteNyheter.length > 0 ? (
+          <div class="list">
+            {sisteNyheter.map((n) => (
+              <a class="list__item" href={`/nyheter/${n.slug}/`}>
+                <div class="list__title">{n.title}</div>
+                <div class="list__meta">
+                  {new Date(n.publishedAt).toLocaleDateString("nb-NO", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                  })}
+                </div>
+              </a>
+            ))}
+          </div>
+        ) : (
+          <p>Ingen nyheiter enda.</p>
+        )
+      }
+    </article>
+
+    <!-- KAMPER -->
+    <article class="card">
+      <header class="card__header">
+        <h2>Kamper</h2>
+        <a href={FOTBALL_URL}>Alle</a>
+      </header>
+      {
+        kamper.length > 0 ? (
+          <div class="list">
+            {kamper.map((k) => (
+              <div class="list__item list__item--static">
+                <div class="list__title">{k.title}</div>
+                <div class="list__meta">
+                  {k.start
+                    ? new Date(k.start).toLocaleString("nb-NO", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })
+                    : ""}
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p class="muted">
+            Ingen kampar å vise enda. (Data oppdateres automatisk.)
+          </p>
+        )
+      }
+      <div class="actions">
+        <a href={ICS_URL} role="button">Abonner på kampkalender</a>
+        <a href={FOTBALL_URL} role="button" class="secondary"
+          >Sjå kampar på fotball.no</a
+        >
+      </div>
+    </article>
+  </section>
+
+  <!-- MERKER -->
+  <section class="badges">
+    <article class="badge">
+      <strong>Fair Play</strong>
+      <span>Respekt · inkludering · glede</span>
+    </article>
+    <article class="badge">
+      <strong>Kvalitetsklubb</strong>
+      <span>NFF-sertifisering</span>
+    </article>
+    <article class="badge">
+      <strong>Dugnad</strong>
+      <span>Vi bygger klubb saman</span>
+    </article>
+  </section>
+
+  <!-- SPONSORAR -->
+  {
+    hjemmeside?.sponsors?.length > 0 && (
+      <section class="sponsors">
+        <h2>Sponsorer</h2>
+        <div class="sponsors__grid">
+          {hjemmeside.sponsors.map((s) => (
+            <a class="sponsor-card" href={s.url ?? "#"} aria-label={s.name}>
+              {s.logoRef && (
+                <img
+                  src={urlFor(s.logoRef).height(80).url()}
+                  alt={s.name}
+                />
+              )}
+            </a>
+          ))}
+        </div>
+      </section>
+    )
+  }
+</BaseLayout>
