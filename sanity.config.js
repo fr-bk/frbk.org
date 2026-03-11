@@ -3,8 +3,8 @@ import { structureTool } from "sanity/structure";
 import { visionTool } from "@sanity/vision";
 import { schemaTypes } from "./schemas/index.js";
 
-const projectId = process.env.PUBLIC_SANITY_PROJECT_ID;
-const dataset = process.env.PUBLIC_SANITY_DATASET ?? "production";
+const projectId = import.meta.env.PUBLIC_SANITY_PROJECT_ID;
+const dataset = import.meta.env.PUBLIC_SANITY_DATASET ?? "production";
 
 export default defineConfig({
   projectId,
