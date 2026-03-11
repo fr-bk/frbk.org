@@ -18,7 +18,9 @@
     if (!btn) return;
 
     const current = root.getAttribute("data-theme");
-    const next = current === "dark" ? "light" : "dark";
+    const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const isDark = current === "dark" || (!current && systemDark);
+    const next = isDark ? "light" : "dark";
 
     root.setAttribute("data-theme", next);
     localStorage.setItem(STORAGE_KEY, next);

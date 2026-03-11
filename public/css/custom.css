@@ -213,17 +213,28 @@ header nav ul{
   transform: translateY(-6px) rotate(-45deg);
 }
 
+/* Nav-actions (tema-knapp + hamburger, alltid synleg) */
+.nav-actions{
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-left: auto;
+}
+
 /* Theme bryter */
 .theme-toggle{
   border: 0;
   border-radius: 999px;
-  padding: .35rem .55rem;
+  padding: 0;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
   background: transparent;
   cursor: pointer;
   line-height: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  position: relative;
 }
 .theme-toggle:hover{
   background: rgba(255,255,255,0.12);
@@ -653,9 +664,6 @@ footer.container{
   .nav-brand{
     flex: 1;
   }
-  .nav-actions{
-    margin-left: auto;
-  }
   .nav-links{
     justify-content: center;
   }
@@ -958,11 +966,18 @@ footer.container{
 /* --- Mobiltilpassing --- */
 @media (max-width: 480px) {
   .frbk-chat {
-    bottom: 1rem;
+    bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
     right: 1rem;
+    left: 1rem;
+    align-items: flex-end;
   }
   .frbk-chat__window {
-    width: calc(100vw - 2rem);
-    max-height: 60vh;
+    width: 100%;
+    max-height: min(72dvh, 72vh);
+    border-radius: var(--radius, 16px);
+  }
+  .frbk-chat__toggle {
+    width: 3.25rem;
+    height: 3.25rem;
   }
 }

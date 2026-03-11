@@ -13,28 +13,28 @@ const { navigationPages = [] } = Astro.props;
         </strong>
       </li>
     </ul>
-    <button class="menu-toggle" type="button" aria-label="Meny" aria-expanded="false" aria-controls="site-nav-links">
-      <span class="menu-toggle__bar"></span>
-      <span class="menu-toggle__bar"></span>
-      <span class="menu-toggle__bar"></span>
-    </button>
     <ul id="site-nav-links" class="nav-links">
       <li><a href="/">Hjem</a></li>
       <li><a href="/nyheter/">Nyheter</a></li>
       {navigationPages.map((page) => (
         <li><a href={`/${page.slug}/`}>{page.navigationTitle ?? page.title}</a></li>
       ))}
-      <li>
-        <button class="theme-toggle" type="button" aria-label="Bytt tema" title="Bytt tema">
-          <svg class="theme-icon theme-icon--sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-            <circle cx="12" cy="12" r="4.5"></circle>
-            <path d="M12 2.5v2.5M12 19v2.5M4.5 12H2M22 12h-2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"></path>
-          </svg>
-          <svg class="theme-icon theme-icon--moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-            <path d="M20.5 15.6a8.5 8.5 0 1 1-8.1-12 7 7 0 1 0 8.1 12z"></path>
-          </svg>
-        </button>
-      </li>
     </ul>
+    <div class="nav-actions">
+      <button class="theme-toggle" type="button" aria-label="Bytt tema" title="Bytt tema">
+        <svg class="theme-icon theme-icon--sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <circle cx="12" cy="12" r="4.5"></circle>
+          <path d="M12 2.5v2.5M12 19v2.5M4.5 12H2M22 12h-2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"></path>
+        </svg>
+        <svg class="theme-icon theme-icon--moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M20.5 15.6a8.5 8.5 0 1 1-8.1-12 7 7 0 1 0 8.1 12z"></path>
+        </svg>
+      </button>
+      <button class="menu-toggle" type="button" aria-label="Meny" aria-expanded="false" aria-controls="site-nav-links">
+        <span class="menu-toggle__bar"></span>
+        <span class="menu-toggle__bar"></span>
+        <span class="menu-toggle__bar"></span>
+      </button>
+    </div>
   </nav>
 </header>
