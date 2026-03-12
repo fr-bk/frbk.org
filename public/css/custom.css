@@ -1984,6 +1984,9 @@ footer.container{
     right: 1rem;
     left: 1rem;
     align-items: flex-end;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 180ms ease;
   }
   .frbk-chat__window {
     width: 100%;
@@ -1996,6 +1999,12 @@ footer.container{
   .frbk-chat__toggle {
     width: 3.25rem;
     height: 3.25rem;
+  }
+
+  body.mobile-chat-visible .frbk-chat,
+  body.nav-menu-open.nav-menu-scrolled .frbk-chat {
+    opacity: 1;
+    pointer-events: auto;
   }
 }
 

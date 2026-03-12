@@ -38,11 +38,14 @@
   const navLinks = document.querySelector(".nav-links");
   const themeBtn = document.querySelector(".theme-toggle");
   const CHAT_REVEAL_SCROLL = 220;
+  const MOBILE_CHAT_REVEAL_SCROLL = 280;
 
   function updateChatVisibility() {
     const menuOpen = document.body.classList.contains("nav-menu-open");
     const shouldReveal = menuOpen && window.scrollY > CHAT_REVEAL_SCROLL;
+    const mobileCanShow = window.scrollY > MOBILE_CHAT_REVEAL_SCROLL;
     document.body.classList.toggle("nav-menu-scrolled", shouldReveal);
+    document.body.classList.toggle("mobile-chat-visible", mobileCanShow);
   }
 
   if (themeBtn) {
@@ -71,4 +74,5 @@
   }
 
   window.addEventListener("scroll", updateChatVisibility, { passive: true });
+  updateChatVisibility();
 })();
