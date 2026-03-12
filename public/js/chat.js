@@ -119,6 +119,12 @@
       if (e.key !== "Tab" || !isOpen) return;
       trapFocus(e, win);
     });
+
+    document.addEventListener("click", function (e) {
+      if (!isOpen) return;
+      if (win.contains(e.target) || btn.contains(e.target)) return;
+      setOpen(false, win, btn);
+    });
   }
 
   function toggleOpen(win, btn, input) {
