@@ -3,7 +3,7 @@
 
   var API_URL = "/api/chat";
   var WELCOME =
-    "Hei! Eg heiter Raymond 🟠🔴🔵 Spør meg om kampar, klubbhistoria, kontaktinfo – eller kva som helst anna du lurer på!";
+    "Hei! Eg heiter Ray 🟠🔴🔵 Spør meg om kampar, klubbhistoria, kontaktinfo – eller kva som helst anna du lurer på!";
 
   var STORAGE_KEY = "frbk-chat-history";
   var isOpen = false;
@@ -31,20 +31,20 @@
 
     var btn = document.createElement("button");
     btn.className = "frbk-chat__toggle";
-    btn.setAttribute("aria-label", "Opne Raymond");
+    btn.setAttribute("aria-label", "Opne Ray");
     btn.innerHTML =
       '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6-.097 1.016-.417 2.13-.771 2.966-.079.186.074.394.273.371 2.343-.261 3.944-.823 4.793-1.354C7.556 14.985 7.778 15 8 15z"/></svg>';
 
     var win = document.createElement("div");
     win.className = "frbk-chat__window";
     win.setAttribute("role", "dialog");
-    win.setAttribute("aria-label", "Raymond chat");
+    win.setAttribute("aria-label", "Ray chat");
     win.setAttribute("aria-modal", "false");
     win.setAttribute("aria-hidden", "true");
     win.setAttribute("tabindex", "-1");
     win.innerHTML =
       '<div class="frbk-chat__header">' +
-      '<span class="frbk-chat__title">Raymond</span>' +
+      '<span class="frbk-chat__title">Ray</span>' +
       '<div class="frbk-chat__header-actions">' +
       '<button class="frbk-chat__new" aria-label="Start ny samtale" title="Ny samtale">↺</button>' +
       '<button class="frbk-chat__close" aria-label="Lukk chat">✕</button>' +
@@ -53,7 +53,7 @@
       '<div class="frbk-chat__messages" id="frbk-messages" aria-live="polite" aria-relevant="additions" aria-label="Chat-meldingar"></div>' +
       '<div class="frbk-chat__footer">' +
       '<div class="frbk-chat__input-wrap">' +
-      '<input class="frbk-chat__input" type="text" placeholder="Skriv ein melding…" aria-label="Melding til Raymond" maxlength="300">' +
+      '<input class="frbk-chat__input" type="text" placeholder="Skriv ein melding…" aria-label="Melding til Ray" maxlength="300">' +
       '<span class="frbk-chat__counter" aria-live="polite" aria-atomic="true">0/300</span>' +
       "</div>" +
       '<button class="frbk-chat__send" aria-label="Send melding">' +
@@ -135,7 +135,7 @@
     btn.classList.toggle("frbk-chat__toggle--open", open);
     win.setAttribute("aria-hidden", open ? "false" : "true");
     win.setAttribute("aria-modal", open ? "true" : "false");
-    btn.setAttribute("aria-label", open ? "Lukk Raymond" : "Opne Raymond");
+    btn.setAttribute("aria-label", open ? "Lukk Ray" : "Opne Ray");
     if (!open && lastFocus && typeof lastFocus.focus === "function") {
       lastFocus.focus();
     }
