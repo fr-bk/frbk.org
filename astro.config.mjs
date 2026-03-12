@@ -8,7 +8,7 @@ const env = loadEnv(process.env.NODE_ENV ?? "development", process.cwd(), "");
 
 export default defineConfig({
   output: "server",
-  adapter: vercel(),
+  adapter: vercel({ webAnalytics: { enabled: true } }),
   site: "https://frbk.org",
   integrations: [
     react(),

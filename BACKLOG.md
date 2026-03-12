@@ -33,7 +33,7 @@ og dukkar difor ikkje opp under «Kampar» på nettsida.
 **Mogleg løysing (enkel):**
 - Legg til eit fritekstfelt i Sanity (`hjemmeside` eller eige dokument) der redaktør kan
   skrive ein kort tekst om kommande cupar (t.d. «Vi deltek i Norway Cup 14.–20. juli»).
-- Feltet lagrast som JSON og hentast av AI-chatten (Raymond) og kan visast under kampkortet.
+- Feltet lagrast som JSON og hentast av AI-chatten (Ray) og kan visast under kampkortet.
 - Implementasjon: nytt `cupInfo`-felt (`text`, maks 300 teikn) i `hjemmeside`-skjemaet +
   inkluder det i `hjemmesideQuery` + vis under `.card--matches` på framsida.
 
