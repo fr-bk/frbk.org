@@ -1721,6 +1721,14 @@ body.chat-open .frbk-chat::before {
   pointer-events: auto;
 }
 
+body.footer-chat-hidden:not(.chat-open) .frbk-chat {
+  opacity: 0;
+}
+
+body.footer-chat-hidden:not(.chat-open) .frbk-chat__toggle {
+  pointer-events: none;
+}
+
 /* --- Toggle-knapp --- */
 .frbk-chat__toggle {
   width: 3.5rem;

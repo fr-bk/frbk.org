@@ -37,15 +37,22 @@
   const menuBtn = document.querySelector(".menu-toggle");
   const navLinks = document.querySelector(".nav-links");
   const themeBtn = document.querySelector(".theme-toggle");
+  const footer = document.querySelector("footer");
   const CHAT_REVEAL_SCROLL = 220;
   const MOBILE_CHAT_REVEAL_SCROLL = 280;
 
   function updateChatVisibility() {
     const menuOpen = document.body.classList.contains("nav-menu-open");
+    const chatOpen = document.body.classList.contains("chat-open");
     const shouldReveal = menuOpen && window.scrollY > CHAT_REVEAL_SCROLL;
     const mobileCanShow = window.scrollY > MOBILE_CHAT_REVEAL_SCROLL;
+    const footerVisible =
+      !chatOpen &&
+      footer &&
+      footer.getBoundingClientRect().top < window.innerHeight - 24;
     document.body.classList.toggle("nav-menu-scrolled", shouldReveal);
     document.body.classList.toggle("mobile-chat-visible", mobileCanShow);
+    document.body.classList.toggle("footer-chat-hidden", Boolean(footerVisible));
   }
 
   if (themeBtn) {
