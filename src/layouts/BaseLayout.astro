@@ -2,7 +2,7 @@
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import { VisualEditing } from "@sanity/astro/visual-editing";
-import { loadQuery, presentationEnabled } from "../lib/sanity.js";
+import { cleanStega, loadQuery, presentationEnabled } from "../lib/sanity.js";
 import { navigationPagesQuery, globalConfigQuery } from "../lib/queries.js";
 
 const {
@@ -21,13 +21,15 @@ const [navigationPages, globalConfig] = await Promise.all([
 const facebookUrl = globalConfig?.facebookUrl ?? null;
 
 const siteTitle = "Fiksdal/Rekdal ballklubb";
-const pageTitle = title ? `${title} | ${siteTitle}` : siteTitle;
+const pageTitle = title ? `${cleanStega(title)} | ${siteTitle}` : siteTitle;
 const pageDescription =
-  description ??
+  cleanStega(description) ??
   "Fotballglede for alle sidan 1979 – ein inkluderande fotballklubb i Møre og Romsdal.";
 const siteUrl = Astro.site ?? "https://frbk.org";
 const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
-const ogImageUrl = ogImage ?? new URL("/img/hero-fotballbane.jpg", siteUrl).href;
+const ogImageUrl = cleanStega(ogImage) ?? new URL("/img/hero-fotballbane.jpg", siteUrl).href;
+const cleanHeroImage = cleanStega(heroImage);
+const cleanHeroPosition = cleanStega(heroPosition);
 ---
 
 <!doctype html>
@@ -70,7 +72,7 @@ const ogImageUrl = ogImage ?? new URL("/img/hero-fotballbane.jpg", siteUrl).href
       isHome ? (
         <section
           class="masthead masthead--hero"
-          style={`--masthead-image: url('${heroImage}'); --masthead-position: ${heroPosition};`}
+          style={`--masthead-image: url('${cleanHeroImage}'); --masthead-position: ${cleanHeroPosition};`}
         >
           <Header navigationPages={navigationPages} facebookUrl={facebookUrl} />
           <div class="container masthead__content">
@@ -80,7 +82,7 @@ const ogImageUrl = ogImage ?? new URL("/img/hero-fotballbane.jpg", siteUrl).href
       ) : (
         <section
           class="masthead"
-          style={`--masthead-image: url('${heroImage}'); --masthead-position: ${heroPosition};`}
+          style={`--masthead-image: url('${cleanHeroImage}'); --masthead-position: ${cleanHeroPosition};`}
         >
           <Header navigationPages={navigationPages} facebookUrl={facebookUrl} />
         </section>

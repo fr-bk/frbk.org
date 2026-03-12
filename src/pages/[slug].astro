@@ -70,6 +70,10 @@ const clubFacts = side?.clubFacts ?? [];
 const milestones = side?.milestones ?? [];
 const notablePlayers = side?.notablePlayers ?? [];
 const boardMembers = side?.boardMembers ?? [];
+const displayedClubFacts =
+  slug === "om-klubben"
+    ? clubFacts.filter((fact) => fact?.label !== "Tilbod").slice(0, 3)
+    : clubFacts;
 const hasStructuredSections =
   contactCards.length > 0 || documents.length > 0 || clubFacts.length > 0 ||
   milestones.length > 0 || notablePlayers.length > 0 || boardMembers.length > 0;
@@ -127,7 +131,7 @@ const sanitizePhoneHref = (value = "") => value.replace(/[^\d+]/g, "");
           </section>
         )}
 
-        {clubFacts.length > 0 && (
+        {displayedClubFacts.length > 0 && (
           <section class="info-section info-section--facts" aria-labelledby="club-facts-title">
             <div class="section-intro">
               <div class="section-intro__eyebrow">Klubbfakta</div>
@@ -135,7 +139,7 @@ const sanitizePhoneHref = (value = "") => value.replace(/[^\d+]/g, "");
             </div>
 
             <div class="facts-grid">
-              {clubFacts.map((fact) => (
+              {displayedClubFacts.map((fact) => (
                 <article class="fact-card">
                   <div class="fact-card__label">{fact.label}</div>
                   <div class="fact-card__value">{fact.value}</div>

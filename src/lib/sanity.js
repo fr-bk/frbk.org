@@ -1,4 +1,5 @@
 import { sanityClient } from "sanity:client";
+import { stegaClean } from "@sanity/client/stega";
 import imageUrlBuilder from "@sanity/image-url";
 
 const visualEditingEnabled =
@@ -10,6 +11,10 @@ const builder = imageUrlBuilder(sanityClient);
 /** Generer bilde-URL frå eit Sanity-bileteref */
 export function urlFor(source) {
   return builder.image(source);
+}
+
+export function cleanStega(value) {
+  return stegaClean(value);
 }
 
 export async function loadQuery(query, params = {}) {

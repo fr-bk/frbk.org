@@ -37,6 +37,13 @@
   const menuBtn = document.querySelector(".menu-toggle");
   const navLinks = document.querySelector(".nav-links");
   const themeBtn = document.querySelector(".theme-toggle");
+  const CHAT_REVEAL_SCROLL = 220;
+
+  function updateChatVisibility() {
+    const menuOpen = document.body.classList.contains("nav-menu-open");
+    const shouldReveal = menuOpen && window.scrollY > CHAT_REVEAL_SCROLL;
+    document.body.classList.toggle("nav-menu-scrolled", shouldReveal);
+  }
 
   if (themeBtn) {
     themeBtn.setAttribute("aria-pressed", String(initialDark));
@@ -46,13 +53,22 @@
     menuBtn.addEventListener("click", () => {
       const isOpen = nav.classList.toggle("is-open");
       menuBtn.setAttribute("aria-expanded", String(isOpen));
+      document.body.classList.toggle("nav-menu-open", isOpen);
+      if (!isOpen) {
+        document.body.classList.remove("nav-menu-scrolled");
+      }
+      updateChatVisibility();
     });
 
     navLinks.addEventListener("click", (e) => {
       if (e.target.closest("a")) {
         nav.classList.remove("is-open");
         menuBtn.setAttribute("aria-expanded", "false");
+        document.body.classList.remove("nav-menu-open");
+        document.body.classList.remove("nav-menu-scrolled");
       }
     });
   }
+
+  window.addEventListener("scroll", updateChatVisibility, { passive: true });
 })();

@@ -94,6 +94,8 @@
   --pico-primary-background: var(--brand);
   --pico-primary-border: var(--brand);
   --pico-border-radius: var(--radius);
+  --content-wide: 72rem;
+  --content-narrow: 70ch;
 }
 
 /* ---------- Globale verdier--------- */
@@ -132,6 +134,8 @@ a:hover{
 header.container{
   margin-top: 0;
   margin-bottom: 0;
+  position: relative;
+  z-index: 20;
 }
 
 header nav{
@@ -144,6 +148,8 @@ header nav{
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
+  position: relative;
+  z-index: 21;
 }
 
 header nav a{
@@ -180,6 +186,14 @@ header nav ul{
 .nav-links a{
   display: inline-flex;
   align-items: center;
+  border-radius: 999px;
+  transition: background-color 140ms ease, opacity 140ms ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.nav-links a:hover,
+.nav-links a:active{
+  background: rgba(255,255,255,0.12);
 }
 
 .nav-brand{
@@ -436,7 +450,8 @@ a[role="button"].secondary:hover{
   display:grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.25rem;
-  margin: 1.75rem 0 2rem;
+  max-width: var(--content-wide);
+  margin: 1.75rem auto 2rem;
 }
 
 .section-intro{
@@ -444,7 +459,8 @@ a[role="button"].secondary:hover{
   justify-content: space-between;
   align-items: end;
   gap: 1.5rem;
-  margin: 2rem 0 1rem;
+  max-width: var(--content-wide);
+  margin: 2rem auto 1rem;
 }
 
 .section-intro__eyebrow{
@@ -477,7 +493,8 @@ a[role="button"].secondary:hover{
   display: grid;
   grid-template-columns: minmax(0, 1.2fr) minmax(18rem, 0.8fr);
   gap: 1.25rem;
-  margin-bottom: 2rem;
+  max-width: var(--content-wide);
+  margin: 0 auto 2rem;
 }
 
 .news-feature{
@@ -493,6 +510,12 @@ a[role="button"].secondary:hover{
   color: #fff;
   text-decoration: none;
   box-shadow: var(--shadow);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.news-feature:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 18px 34px rgba(0,0,0,0.18);
 }
 
 .news-feature__meta{
@@ -553,7 +576,7 @@ a[role="button"].secondary:hover{
 .quick-link-card:hover{
   transform: translateY(-2px);
   border-color: color-mix(in srgb, var(--brand) 35%, var(--border));
-  box-shadow: var(--shadow-soft);
+  box-shadow: var(--shadow);
 }
 
 .quick-link-card h3{
@@ -642,6 +665,8 @@ a[role="button"].secondary:hover{
 
 .masthead__content{
   padding-top: 1.25rem;
+  position: relative;
+  z-index: 1;
 }
 
 .masthead header nav a{
@@ -897,6 +922,8 @@ footer.container{
   }
   .site-nav.is-open .nav-links{
     display: flex;
+    position: relative;
+    z-index: 30;
   }
   .no-js .nav-links{
     display: flex;
@@ -916,18 +943,18 @@ footer.container{
   }
   .nav-links{
     justify-content: center;
-    align-items: stretch;
+    align-items: center;
   }
   .nav-links li{
     width: 100%;
     max-width: 24rem;
+    margin-inline: auto;
   }
   .nav-links a{
     display: flex;
     justify-content: center;
     width: 100%;
     padding: 0.65rem 1rem;
-    border-radius: 0;
     background: transparent;
     border: 0;
   }
@@ -969,6 +996,14 @@ footer.container{
   .facts-grid,
   .contact-grid{
     grid-template-columns: 1fr;
+  }
+  .prose--om-klubben .facts-grid{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: none;
+  }
+  .prose--kontakt .contact-grid{
+    grid-template-columns: 1fr;
+    max-width: none;
   }
   .document-card,
   .timeline-item{
@@ -1034,13 +1069,43 @@ footer.container{
   .prose__body--surface{
     padding: 1.1rem 1rem;
   }
+  .contact-card,
+  .fact-card{
+    padding: 1rem;
+  }
+  .contact-card h3{
+    font-size: 1.05rem;
+  }
+  .contact-card__role{
+    font-size: 0.76rem;
+    letter-spacing: 0.06em;
+  }
+  .page-highlight{
+    min-height: auto;
+    padding: 0.95rem 1rem;
+  }
+  .contact-card__details{
+    gap: 0.45rem;
+    margin-top: 0.8rem;
+  }
+  .contact-card__details a{
+    font-size: 0.96rem;
+    overflow-wrap: anywhere;
+  }
+  .fact-card__value{
+    font-size: 1.05rem;
+  }
+  .prose--om-klubben .facts-grid{
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ---------- Side-header ---------- */
 .page-header {
   padding: 1.75rem 1.5rem 1.5rem;
   border-bottom: 1px solid var(--border);
-  margin-bottom: 2rem;
+  max-width: var(--content-wide);
+  margin: 0 auto 2rem;
 }
 .page-header--rich{
   padding-bottom: 1.25rem;
@@ -1073,7 +1138,8 @@ footer.container{
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1.5rem;
-  margin-bottom: 2rem;
+  max-width: var(--content-wide);
+  margin: 0 auto 2rem;
 }
 
 .news-card {
@@ -1192,13 +1258,18 @@ footer.container{
 
 /* ---------- Artikkel / Prose ---------- */
 .prose {
-  max-width: 70ch;
+  max-width: var(--content-narrow);
+}
+
+.prose--page{
+  max-width: none;
 }
 
 .article-header {
   padding: 1.75rem 1.5rem 1.5rem;
   border-bottom: 2px solid var(--border);
-  margin-bottom: 2rem;
+  max-width: var(--content-narrow);
+  margin: 0 auto 2rem;
 }
 
 .article-header--feature{
@@ -1242,6 +1313,8 @@ footer.container{
   border-radius: calc(var(--radius) + 2px);
   background: var(--surface);
   box-shadow: var(--shadow-soft);
+  max-width: var(--content-narrow);
+  margin-inline: auto;
 }
 .prose__body p {
   margin-bottom: 1.25rem;
@@ -1287,6 +1360,7 @@ footer.container{
   color: var(--muted);
   text-decoration: none;
   transition: color 0.15s;
+  width: fit-content;
 }
 .back-link:hover {
   color: var(--brand);
@@ -1297,27 +1371,31 @@ footer.container{
 }
 
 .page-highlights{
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
   gap: 0.75rem;
-  margin: -0.75rem 0 1.5rem;
+  max-width: var(--content-wide);
+  margin: -0.75rem auto 1.5rem;
 }
 
 .page-highlight{
-  display: inline-flex;
-  align-items: center;
-  min-height: 3rem;
-  padding: 0.75rem 1rem;
-  border-radius: 999px;
+  display: flex;
+  align-items: flex-start;
+  min-height: 5rem;
+  padding: 1rem 1.05rem;
+  border-radius: var(--radius);
   border: 1px solid var(--border);
-  background: linear-gradient(180deg, rgba(1,114,173,0.08), rgba(226,91,42,0.04));
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
   color: var(--text);
-  font-weight: 600;
+  font-weight: 700;
+  line-height: 1.4;
 }
 
 .info-section{
-  margin: 2rem 0;
-  padding-inline: 1.5rem;
+  max-width: var(--content-wide);
+  margin: 2rem auto;
+  padding-inline: 0;
 }
 
 .info-section .section-intro{
@@ -1338,6 +1416,21 @@ footer.container{
   gap: 1rem;
 }
 
+.prose--om-klubben .facts-grid{
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  max-width: 52rem;
+}
+
+.prose--kontakt .contact-grid{
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  max-width: 62rem;
+}
+
+.prose--styre .contact-grid{
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  max-width: 68rem;
+}
+
 .fact-card,
 .contact-card,
 .document-card,
@@ -1350,50 +1443,54 @@ footer.container{
 
 .fact-card{
   padding: 1.1rem 1.15rem;
+  min-width: 0;
 }
 
-.fact-card__label{
-  font-size: 0.82rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-.fact-card__value{
-  margin-top: 0.5rem;
-  font-size: 1.25rem;
-  font-weight: 700;
-  line-height: 1.25;
-}
-
-.contact-card{
-  padding: 1.25rem;
-}
-
+.fact-card__label,
 .contact-card__role{
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--brand);
 }
 
+.fact-card__value{
+  margin-top: 0.5rem;
+  font-size: clamp(1rem, 1.7vw, 1.18rem);
+  font-weight: 700;
+  line-height: 1.25;
+  text-wrap: balance;
+  word-break: normal;
+  overflow-wrap: normal;
+  hyphens: manual;
+}
+
+.contact-card{
+  padding: 1.25rem;
+  min-width: 0;
+}
+
 .contact-card h3{
   margin: 0.45rem 0 0;
-  font-size: 1.3rem;
+  font-size: clamp(1rem, 2vw, 1.18rem);
+  line-height: 1.2;
+  text-wrap: balance;
 }
 
 .contact-card__details{
   display: grid;
   gap: 0.55rem;
   margin-top: 1rem;
+  min-width: 0;
 }
 
 .contact-card__details a{
   font-weight: 500;
   text-decoration: none;
-  overflow-wrap: break-word;
-  word-break: break-all;
+  overflow-wrap: anywhere;
+  word-break: normal;
+  min-width: 0;
 }
 
 .document-list,
@@ -1899,6 +1996,18 @@ footer.container{
   .frbk-chat__toggle {
     width: 3.25rem;
     height: 3.25rem;
+  }
+}
+
+@media (max-width: 900px) {
+  body.nav-menu-open .frbk-chat {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  body.nav-menu-open.nav-menu-scrolled .frbk-chat {
+    opacity: 1;
+    pointer-events: auto;
   }
 }
 
