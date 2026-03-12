@@ -9,8 +9,8 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0",
-    "@astrojs/netlify": "^6.0.0",
     "@astrojs/react": "^5.0.0",
+    "@astrojs/vercel": "^9.0.5",
     "@sanity/astro": "^3.0.0",
     "@sanity/client": "^7.0.0",
     "@sanity/image-url": "^1.0.0",

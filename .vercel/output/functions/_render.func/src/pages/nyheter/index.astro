@@ -1,0 +1,99 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { loadQuery, urlFor } from "../../lib/sanity.js";
+import { allNyheterQuery } from "../../lib/queries.js";
+
+const alleNyheter = await loadQuery(allNyheterQuery);
+const featured = alleNyheter[0] ?? null;
+const archive = alleNyheter.slice(1);
+---
+
+<BaseLayout title="Nyheiter">
+  <div class="page-header">
+    <div class="page-header__meta">Klubbnytt</div>
+    <h1>Nyheiter</h1>
+    <p class="lead">Siste nytt frå Fiksdal/Rekdal ballklubb, samla i eit ryddig og lettleseleg arkiv.</p>
+  </div>
+
+  {alleNyheter.length > 0 ? (
+    <>
+      {featured && (
+        <a class="news-card news-card--feature" href={`/nyheter/${featured.slug}/`}>
+          {featured.heroImageRef
+            ? <img
+                class="news-card__img"
+                src={urlFor(featured.heroImageRef).width(960).height(520).url()}
+                alt={featured.heroImageRef.alt ?? featured.title}
+                width="960"
+                height="520"
+              />
+            : <div class="news-card__img-placeholder" aria-hidden="true"></div>
+          }
+          <div class="news-card__body">
+            <div class="news-card__kicker">Siste sak</div>
+            <time class="news-card__date" datetime={featured.publishedAt}>
+              {new Date(featured.publishedAt).toLocaleDateString("nb-NO", {
+                day: "2-digit",
+                month: "long",
+                year: "numeric",
+              })}
+            </time>
+            <h2 class="news-card__title">{featured.title}</h2>
+            {featured.summary && <p class="news-card__summary">{featured.summary}</p>}
+          </div>
+          <div class="news-card__footer">
+            <span class="news-card__read">Les saka</span>
+          </div>
+        </a>
+      )}
+
+      {archive.length > 0 && (
+        <>
+          <section class="section-intro">
+            <div>
+              <span class="section-intro__eyebrow">Arkiv</span>
+              <h2>Fleire nyheiter</h2>
+              <p>Eldre saker frå klubbkvardagen, arrangement og aktivitet rundt laga våre.</p>
+            </div>
+          </section>
+
+          <div class="news-grid">
+            {archive.map((n) => (
+              <a class="news-card" href={`/nyheter/${n.slug}/`}>
+                {n.heroImageRef
+                  ? <img
+                      class="news-card__img"
+                      src={urlFor(n.heroImageRef).width(640).height(360).url()}
+                      alt={n.heroImageRef.alt ?? n.title}
+                      width="640"
+                      height="360"
+                      loading="lazy"
+                    />
+                  : <div class="news-card__img-placeholder" aria-hidden="true"></div>
+                }
+                <div class="news-card__body">
+                  <time class="news-card__date" datetime={n.publishedAt}>
+                    {new Date(n.publishedAt).toLocaleDateString("nb-NO", {
+                      day: "2-digit",
+                      month: "long",
+                      year: "numeric",
+                    })}
+                  </time>
+                  <h2 class="news-card__title">{n.title}</h2>
+                  {n.summary && <p class="news-card__summary">{n.summary}</p>}
+                </div>
+                <div class="news-card__footer">
+                  <span class="news-card__read">Les meir</span>
+                </div>
+              </a>
+            ))}
+          </div>
+        </>
+      )}
+    </>
+  ) : (
+    <div class="empty-state">
+      <p>Ingen nyheiter enda — sjekk tilbake snart!</p>
+    </div>
+  )}
+</BaseLayout>
