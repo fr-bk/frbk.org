@@ -136,6 +136,7 @@
     win.setAttribute("aria-hidden", open ? "false" : "true");
     win.setAttribute("aria-modal", open ? "true" : "false");
     btn.setAttribute("aria-label", open ? "Lukk Ray" : "Opne Ray");
+    document.body.classList.toggle("chat-open", open);
     if (!open && lastFocus && typeof lastFocus.focus === "function") {
       lastFocus.focus();
     }
