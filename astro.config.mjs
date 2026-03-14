@@ -19,6 +19,7 @@ export default defineConfig({
       studioBasePath: "/studio",
       stega: {
         studioUrl: "/studio",
+        enabled: process.env.NODE_ENV !== "production",
       },
     }),
   ],
