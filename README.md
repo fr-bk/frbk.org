@@ -1,147 +1,78 @@
 # frbk.org
 
-Nettside for Fiksdal/Rekdal ballklubb, bygget med Astro og Sanity.
+Nettside for Fiksdal/Rekdal ballklubb — stifta 1979, Møre og Romsdal.
 
 ## Stack
 
-- Astro frontend
-- Embedded Sanity Studio på `/studio`
-- Sanity som CMS
-- Netlify for hosting og serverless-funksjoner
+| Lag | Teknologi |
+|-----|-----------|
+| Frontend | Astro 5 (SSR) |
+| CMS | Sanity v3 — prosjekt `330w38cx`, dataset `production` |
+| Hosting | Vercel (Hobby) — `main` → frbk.org |
+| CSS | Pico CSS v2 (CDN) + `public/css/custom.css` |
+| Chat | Claude API (`claude-sonnet-4-6`) — assistent heiter Ray |
+| Kampar | Henta dagleg frå fotball.no via GitHub Actions → `data/kamper.json` |
 
-## Lokal utvikling
-
-Installer avhengigheter og start dev-server:
+## Kom i gang
 
 ```bash
 npm install
 npm run dev
 ```
 
-Vanlige kommandoer:
-
-```bash
-npm run dev
-npm run build
-npm run preview
-```
+Studio køyrer på `http://localhost:4321/studio`.
 
 ## Miljøvariabler
 
-For vanlig drift og lokal utvikling trenger siden:
+Legg desse i `.env` lokalt (eller i Vercel-dashboardet for produksjon):
 
-- `PUBLIC_SANITY_PROJECT_ID`
-- `PUBLIC_SANITY_DATASET`
+```
+PUBLIC_SANITY_PROJECT_ID=330w38cx
+PUBLIC_SANITY_DATASET=production
+ANTHROPIC_API_KEY=...
 
-For Presentation / draft preview i Sanity Studio kan du i tillegg bruke:
+# Valfritt — for Sanity draft preview
+PUBLIC_SANITY_VISUAL_EDITING_ENABLED=true
+SANITY_API_READ_TOKEN=...
+```
 
-- `PUBLIC_SANITY_VISUAL_EDITING_ENABLED=true`
-- `SANITY_API_READ_TOKEN`
+## Deploy
 
-For migreringsskriptet finnes det én ekstra variabel:
-
-- `SANITY_WRITE_TOKEN`
-
-`SANITY_WRITE_TOKEN` skal kun brukes til migrering eller engangsskript, ikke i vanlig runtime.
-
-Se [`.env.example`](/Users/chrorvik/Prosjekt/frbk.org/.env.example).
-
-## Sanity
-
-Repoet er satt opp mot dette Sanity-prosjektet:
-
-- `projectId`: `330w38cx`
-- `dataset`: `production`
-
-Sanity CLI-konfig ligger i [sanity.cli.js](/Users/chrorvik/Prosjekt/frbk.org/sanity.cli.js).
-
-Viktige dokumenttyper:
-
-- `hjemmeside`
-- `side`
-- `nyhet`
-
-## Studio og preview
-
-Sanity Studio er embedded i appen og finnes på:
-
-- lokalt: `http://localhost:4321/studio` eller den porten Astro faktisk starter på
-- i drift: `https://frbk.org/studio`
-
-Presentation tool er satt opp. Hvis preview oppfører seg rart:
-
-1. sjekk at du bruker riktig lokal port
-2. restart dev-server
-3. hard refresh nettleseren
-4. verifiser at `SANITY_API_READ_TOKEN` faktisk er satt hvis draft preview skal fungere
-
-## Hosting og deploy
-
-Frontend hostes på Netlify.
-
-Netlify-oppsett:
-
-- build command: `npm run build`
-- functions: `netlify/functions`
-- chat-endepunkt: `/api/chat` -> `/.netlify/functions/frbk-chat`
-
-Se [netlify.toml](/Users/chrorvik/Prosjekt/frbk.org/netlify.toml).
-
-Typisk deploy-flyt:
+Push til `dev` → preview-URL på Vercel.
+Merge til `main` → frbk.org.
 
 ```bash
 git add .
-git commit -m "Describe change"
+git commit -m "Beskriv endring"
 git push
 ```
 
-Hvis repoet er koblet riktig til Netlify, deployes endringer automatisk ved push.
+## Arkitektur
 
-## Viktige filer
+```
+src/pages/
+  index.astro          # Framsida
+  [slug].astro         # Generiske Sanity-sider (om, kontakt, fair play …)
+  nyheter/[slug].astro # Nyheiter
+  personvern.astro     # Personvernserklæring (statisk)
+  api/chat.js          # Chat-endepunkt (SSR, streama SSE)
 
-- [astro.config.mjs](/Users/chrorvik/Prosjekt/frbk.org/astro.config.mjs)
-- [sanity.config.js](/Users/chrorvik/Prosjekt/frbk.org/sanity.config.js)
-- [sanity.cli.js](/Users/chrorvik/Prosjekt/frbk.org/sanity.cli.js)
-- [src/lib/sanity.js](/Users/chrorvik/Prosjekt/frbk.org/src/lib/sanity.js)
-- [src/lib/queries.js](/Users/chrorvik/Prosjekt/frbk.org/src/lib/queries.js)
-- [src/pages/index.astro](/Users/chrorvik/Prosjekt/frbk.org/src/pages/index.astro)
-- [src/pages/[slug].astro](/Users/chrorvik/Prosjekt/frbk.org/src/pages/[slug].astro)
-- [src/pages/nyheter/[slug].astro](/Users/chrorvik/Prosjekt/frbk.org/src/pages/nyheter/[slug].astro)
-- [public/js/chat.js](/Users/chrorvik/Prosjekt/frbk.org/public/js/chat.js)
-- [public/css/custom.css](/Users/chrorvik/Prosjekt/frbk.org/public/css/custom.css)
+public/
+  js/chat.js           # Chat-widget
+  js/theme.js          # Tema- og menylogikk
+  css/custom.css       # All tilpassa styling
 
-## Migrering
+data/kamper.json       # Kampdata frå fotball.no (autogenerert)
+schemas/               # Sanity-dokumenttypar
+```
 
-Migreringsskriptet ligger i:
+## Kjent kunnskap
 
-- [scripts/migrate-hugo-to-sanity.mjs](/Users/chrorvik/Prosjekt/frbk.org/scripts/migrate-hugo-to-sanity.mjs)
+- Sanity-dokument-ID-ar må ikkje bruke punktum (`.`) — gir feil på public read
+- Hard refresh løyser mange rare oppførslar etter JS/CSS-endringar
+- `[slug].astro` er SSR — statiske sider treng `export const prerender = true`
 
-Dette er et engangsskript for import fra Hugo og for senere datasynk ved behov.
+## Lisens
 
-Viktig historikk:
-
-- Sanity-dokument-ID-er må ikke bruke punktum (`.`) hvis innholdet skal være offentlig lesbart
-- gamle migreringer med private dokument-ID-er førte til at public read feilet
-
-## Kjent prosjektkunnskap
-
-- Chatboten heter `Ray`
-- Chat-widgeten er tilpasset mobil og desktop forskjellig
-- Embedded Studio og Presentation gjør at gammel nettlesercache noen ganger kan gi misvisende oppførsel
-- Hvis klikk oppfører seg rart, test alltid med hard refresh først etter JS/CSS-endringer
-
-## Ting som ikke bør ligge i repoet
-
-Hold dette utenfor README og repo:
-
-- personlige innlogginger
-- API-tokens
-- Netlify-kontoopplysninger
-- DNS-innlogging
-
-Dette hører bedre hjemme i et separat driftsnotat.
-
-## License
-
-Code is licensed under the MIT License.  
-Content and media are © Fiksdal/Rekdal ballklubb.
+Kode: MIT.
+Innhald og media: © Fiksdal/Rekdal ballklubb.
