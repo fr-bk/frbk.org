@@ -7,6 +7,4 @@
 .env.local
 .netlify/
 .vercel/
-.vercel
-/.ver
 .env*.local
