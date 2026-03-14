@@ -1,10 +1,19 @@
 import fs from "node:fs";
 
-const ICS_URL = process.env.ICS_URL;
-if (!ICS_URL) {
+const BASE_URL = process.env.ICS_URL;
+if (!BASE_URL) {
   console.error("Missing ICS_URL env var");
   process.exit(1);
 }
+
+// Add date range: 30 days back → 12 months ahead
+// fotball.no's API returns nothing without date parameters
+const pad = (n) => String(n).padStart(2, "0");
+const fmt = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const from = new Date(); from.setDate(from.getDate() - 30);
+const to   = new Date(); to.setFullYear(to.getFullYear() + 1);
+const ICS_URL = `${BASE_URL}&fromDate=${fmt(from)}&toDate=${fmt(to)}`;
+console.log(`Fetching: ${ICS_URL}`);
 
 function unescapeText(s = "") {
   return s
@@ -109,4 +118,8 @@ const upcoming = events
 fs.mkdirSync("data", { recursive: true });
 fs.writeFileSync("data/kamper.json", JSON.stringify(upcoming, null, 2) + "\n", "utf8");
 
-console.log(`Wrote ${upcoming.length} events to data/kamper.json`);
+// Also write to public/ so it's accessible at https://frbk.org/kamper.json (used by Ray)
+fs.mkdirSync("public", { recursive: true });
+fs.writeFileSync("public/kamper.json", JSON.stringify(upcoming, null, 2) + "\n", "utf8");
+
+console.log(`Wrote ${upcoming.length} events to data/kamper.json and public/kamper.json`);

@@ -18,7 +18,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "24"
 
       - name: Fetch & generate JSON
         env:
@@ -29,7 +29,7 @@ jobs:
         run: |
           git config user.name "frbk-bot"
           git config user.email "frbk-bot@users.noreply.github.com"
-          git add data/kamper.json
+          git add data/kamper.json public/kamper.json
           git diff --cached --quiet && exit 0
           git commit -m "Update matches data"
           git push
