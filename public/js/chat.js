@@ -3,7 +3,7 @@
 
   var API_URL = "/api/chat";
   var WELCOME =
-    "Hei! Eg heiter Ray 🟠🔴🔵 Spør meg om kampar, klubbhistoria, kontaktinfo – eller kva som helst anna du lurer på!";
+    "Hei! Eg er Ray - klubbens digitale kjenning 🟠🔴🔵\n\nSpør meg om kampar, kontaktinfo eller kva som helst anna om klubben.";
 
   var STORAGE_KEY = "frbk-chat-history";
   var isOpen = false;
