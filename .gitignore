@@ -4,7 +4,7 @@
 /.astro/
 .DS_Store
 .env
-.env.local
+.env.*
+!.env.example
 .netlify/
 .vercel/
-.env*.local

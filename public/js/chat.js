@@ -281,6 +281,9 @@
             }
 
             read();
+          }).catch(function () {
+            setLoading(msgsEl, false);
+            appendMsg("assistant", "Tilkoplinga vart broten. Prøv igjen.", msgsEl);
           });
         }
 

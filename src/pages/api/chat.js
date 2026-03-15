@@ -12,7 +12,7 @@ const MAX_TOKENS = 512;
 // --- Dynamisk lagdata med cache ---
 let lagCache = null;
 let lagCacheTime = 0;
-const LAG_CACHE_TTL = 60 * 60 * 1000;
+const LAG_CACHE_TTL = 24 * 60 * 60 * 1000;
 const LAG_FALLBACK = ["Fiksdal/Rekdal G12 BK", "Fiksdal/Rekdal J7"];
 
 async function fetchLag() {
@@ -35,10 +35,89 @@ async function fetchLag() {
   return lagCache ?? LAG_FALLBACK;
 }
 
+// --- Sideinnhald frå Sanity med cache ---
+let sideCache = null;
+let sideCacheTime = 0;
+const SIDE_CACHE_TTL = 24 * 60 * 60 * 1000;
+
+function ptToText(blocks) {
+  if (!Array.isArray(blocks)) return "";
+  return blocks
+    .filter((b) => b._type === "block")
+    .map((b) => (b.children || []).map((c) => c.text || "").join(""))
+    .filter(Boolean)
+    .join("\n");
+}
+
+async function fetchSideinnhald() {
+  if (sideCache && Date.now() - sideCacheTime < SIDE_CACHE_TTL) {
+    return sideCache;
+  }
+  try {
+    const projectId = import.meta.env.PUBLIC_SANITY_PROJECT_ID;
+    const dataset = import.meta.env.PUBLIC_SANITY_DATASET ?? "production";
+    const query = encodeURIComponent(
+      `*[_type == "side"] | order(coalesce(navigationOrder,100) asc) {
+        title,
+        "slug": slug.current,
+        body,
+        contactCards[]{ name, role, phone, email, linkLabel, linkUrl },
+        clubFacts[]{ label, value },
+        boardMembers[]{ name, role, phone, email }
+      }`
+    );
+    const res = await fetch(
+      `https://${projectId}.api.sanity.io/v2021-10-21/data/query/${dataset}?query=${query}`,
+      { signal: AbortSignal.timeout(5000) }
+    );
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data.result)) {
+        sideCache = data.result;
+        sideCacheTime = Date.now();
+        return sideCache;
+      }
+    }
+  } catch {
+    // Nettverksfeil – bruk cache eller tom liste
+  }
+  return sideCache ?? [];
+}
+
+function formatSideForPrompt(side) {
+  const lines = [`### ${side.title}`];
+  const bodyText = ptToText(side.body);
+  if (bodyText) lines.push(bodyText);
+  if (side.clubFacts?.length) {
+    lines.push(side.clubFacts.map((f) => `${f.label}: ${f.value}`).join("\n"));
+  }
+  if (side.boardMembers?.length) {
+    lines.push(
+      side.boardMembers
+        .map((m) => `${m.name} (${m.role})${m.phone ? ` – ${m.phone}` : ""}${m.email ? ` – ${m.email}` : ""}`)
+        .join("\n")
+    );
+  }
+  if (side.contactCards?.length) {
+    lines.push(
+      side.contactCards
+        .map((c) => {
+          let s = `${c.name}${c.role ? ` (${c.role})` : ""}`;
+          if (c.phone) s += ` – ${c.phone}`;
+          if (c.email) s += ` – ${c.email}`;
+          if (c.linkLabel && c.linkUrl) s += ` – [${c.linkLabel}](${c.linkUrl})`;
+          return s;
+        })
+        .join("\n")
+    );
+  }
+  return lines.join("\n");
+}
+
 // --- Kampdata med cache ---
 let kamperCache = null;
 let kamperCacheTime = 0;
-const KAMPER_CACHE_TTL = 60 * 60 * 1000;
+const KAMPER_CACHE_TTL = 24 * 60 * 60 * 1000;
 
 async function fetchKamper() {
   if (kamperCache && Date.now() - kamperCacheTime < KAMPER_CACHE_TTL) {
@@ -60,7 +139,7 @@ async function fetchKamper() {
   return kamperCache ?? [];
 }
 
-function buildSystemPrompt(lag, kamper) {
+function buildSystemPrompt(lag, kamper, sider) {
   const lagListe = lag.join(", ");
 
   const lagNamn = lag
@@ -135,10 +214,13 @@ ${
     : "Ingen kampar tilgjengelege akkurat no."
 }
 
+## Innhald frå nettsida
+${sider.length > 0 ? sider.map(formatSideForPrompt).join("\n\n") : "Ingen sideinnhald tilgjengeleg."}
+
 ## Instruksjonar
 - Svar alltid kort og konsist på norsk – maks 2–3 avsnitt
 - Spør alltid kva lag det gjeld om det ikkje er spesifisert
-- Ver venleg og engasjert – dette er ein frivillig nærlagsklubbb
+- Ver venleg og engasjert – dette er ein frivillig nærklubb
 - Viss du ikkje veit svaret, henvis til kontaktinformasjonen
 
 ## Hemmelig identitet
@@ -221,13 +303,13 @@ export async function POST({ request }) {
     });
   }
 
-  const [lag, kamper] = await Promise.all([fetchLag(), fetchKamper()]);
-  const systemPrompt = buildSystemPrompt(lag, kamper);
+  const [lag, kamper, sider] = await Promise.all([fetchLag(), fetchKamper(), fetchSideinnhald()]);
+  const systemPrompt = buildSystemPrompt(lag, kamper, sider);
   const recentMessages = messages.slice(-MAX_HISTORY);
 
   try {
     const stream = client.messages.stream({
-      model: "claude-sonnet-4-6",
+      model: "claude-haiku-4-5-20251001",
       max_tokens: MAX_TOKENS,
       system: systemPrompt,
       messages: recentMessages,
