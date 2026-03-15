@@ -64,6 +64,10 @@ const quickLinks = navigationPages
       quickLinkDescriptions[page.slug] ?? "Meir informasjon om klubben og aktiviteten vår.",
   }));
 
+function kortLagnamn(name) {
+  return name.replace(/Fiksdal\/Rekdal\s+\S+\s+BK/gi, "FiksRek").trim();
+}
+
 function sponsorHref(sponsor) {
   return typeof sponsor?.url === "string" && sponsor.url.trim() ? sponsor.url.trim() : null;
 }
@@ -169,7 +173,7 @@ function sponsorHref(sponsor) {
               const day   = d ? d.toLocaleString("nb-NO", { day: "numeric" }) : "";
               const month = d ? d.toLocaleString("nb-NO", { month: "short" }).replace(".","") : "";
               const time  = d ? d.toLocaleString("nb-NO", { hour: "2-digit", minute: "2-digit" }) : "";
-              const parts = k.title.split(" - ").map(s => s.trim()).filter(Boolean);
+              const parts = k.title.split(" - ").map(s => kortLagnamn(s.replace(/-\s*$/, "").trim())).filter(Boolean);
               const teams = parts.slice(0, 2).join(" – ");
               return (
                 <div class="match-item">
