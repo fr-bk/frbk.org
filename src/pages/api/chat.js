@@ -35,7 +35,32 @@ async function fetchLag() {
   return lagCache ?? LAG_FALLBACK;
 }
 
-function buildSystemPrompt(lag) {
+// --- Kampdata med cache ---
+let kamperCache = null;
+let kamperCacheTime = 0;
+const KAMPER_CACHE_TTL = 60 * 60 * 1000;
+
+async function fetchKamper() {
+  if (kamperCache && Date.now() - kamperCacheTime < KAMPER_CACHE_TTL) {
+    return kamperCache;
+  }
+  try {
+    const res = await fetch("https://frbk.org/kamper.json", { signal: AbortSignal.timeout(3000) });
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data) && data.length > 0) {
+        kamperCache = data;
+        kamperCacheTime = Date.now();
+        return kamperCache;
+      }
+    }
+  } catch {
+    // Nettverksfeil – returner cache eller tom liste
+  }
+  return kamperCache ?? [];
+}
+
+function buildSystemPrompt(lag, kamper) {
   const lagListe = lag.join(", ");
 
   const lagNamn = lag
@@ -46,6 +71,20 @@ function buildSystemPrompt(lag) {
       return `${m[1]}${m[2]} (${type} ${m[2]} år)`;
     })
     .join(" eller ");
+
+  // Finn kva lag som faktisk har kampar – match på lagkode (t.d. G12, J7)
+  const lagMedKampar = lag.filter((l) => {
+    const m = l.match(/\b(G|J|K|M)(\d+)/i);
+    if (!m) return false;
+    const code = m[0].toUpperCase();
+    return kamper.some((k) => k.title && k.title.toUpperCase().includes(code));
+  });
+  const kampInstruks =
+    lagMedKampar.length === 1
+      ? `Berre ${lagMedKampar[0]} har kampar. Svar direkte om dette laget når nokon spør om kampar eller resultat.`
+      : lagMedKampar.length > 1
+        ? `Fleire lag har kampar (${lagMedKampar.join(", ")}). Viss nokon spør om kampar utan å spesifisere lag, spør: «Gjeld det ${lagNamn}?»`
+        : `Viss nokon spør om kampar utan å spesifisere lag, spør: «Gjeld det ${lagNamn}?»`;
 
   return `Du heiter Ray og er ein hjelpsom assistent for Fiksdal/Rekdal Ballklubb. Du svarar alltid på norsk (nynorsk er fint).
 
@@ -61,9 +100,10 @@ Godkjent som Kvalitetsklubb: 2020
 - E-post: fiksdalrekdalbk2@gmail.com
 - Facebook: https://www.fb.com/p/FiksdalRekdal-Ballklubb-100057307494090/
 
-## Aktive lag denne sesongen
+## Aktive lag
 ${lagListe}
-Viss nokon spør om kampar, treningar eller resultat utan å spesifisere lag, spør du: «Gjeld det ${lagNamn}?»
+${kampInstruks}
+Viss nokon spør om treningar utan å spesifisere lag, spør du: «Gjeld det ${lagNamn}?»
 
 ## Første styre (1979)
 - Helge Bjerkevoll (leiar), Sigmund Rekdal (kasserar), Knut Bergheim (sekretær)
@@ -83,10 +123,17 @@ Viss nokon spør om kampar, treningar eller resultat utan å spesifisere lag, sp
 - **Likeverd**: Alle er like verdifulle
 
 ## Kampar og resultat
-Oppdaterte kampar (JSON, oppdatert dagleg): https://frbk.org/kamper.json
-Bruk web_fetch på denne URL-en for konkret kampinfo når brukaren spør om det.
-Felter: title (kampnamn), start (ISO-dato), location (bane), url (lenke til fotball.no).
-Fotball.no sin nettstad er JavaScript-rendra og kan ikkje lesast direkte.
+${
+  kamper.length > 0
+    ? `Oppdaterte kampar (henta dagleg frå fotball.no):\n${kamper
+        .slice(0, 10)
+        .map((k) => {
+          const d = k.start ? new Date(k.start).toLocaleString("nb-NO", { dateStyle: "short", timeStyle: "short" }) : "ukjend tid";
+          return `- ${k.title} | ${d}${k.location ? ` | ${k.location}` : ""}`;
+        })
+        .join("\n")}`
+    : "Ingen kampar tilgjengelege akkurat no."
+}
 
 ## Instruksjonar
 - Svar alltid kort og konsist på norsk – maks 2–3 avsnitt
@@ -174,8 +221,8 @@ export async function POST({ request }) {
     });
   }
 
-  const lag = await fetchLag();
-  const systemPrompt = buildSystemPrompt(lag);
+  const [lag, kamper] = await Promise.all([fetchLag(), fetchKamper()]);
+  const systemPrompt = buildSystemPrompt(lag, kamper);
   const recentMessages = messages.slice(-MAX_HISTORY);
 
   try {
@@ -183,10 +230,6 @@ export async function POST({ request }) {
       model: "claude-sonnet-4-6",
       max_tokens: MAX_TOKENS,
       system: systemPrompt,
-      tools: [
-        { type: "web_search_20260209", name: "web_search" },
-        { type: "web_fetch_20260209", name: "web_fetch" },
-      ],
       messages: recentMessages,
     });
 
