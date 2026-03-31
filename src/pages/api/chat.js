@@ -140,19 +140,22 @@ async function fetchKamper() {
 }
 
 function buildSystemPrompt(lag, kamper, sider) {
-  const lagListe = lag.join(", ");
+  const lagListe = lag.map((l) => `- ${l}`).join("\n");
 
-  const lagNamn = lag
-    .map((l) => {
+  const alderslag = lag.filter((l) => /\b(G|J|K|M)\d+/i.test(l));
+  const andreLag = lag.filter((l) => !/\b(G|J|K|M)\d+/i.test(l));
+
+  const lagNamn = [
+    ...alderslag.map((l) => {
       const m = l.match(/\b(G|J|K|M)(\d+)/i);
       if (!m) return l;
       const type = m[1].toUpperCase() === "G" ? "gutar" : m[1].toUpperCase() === "J" ? "jenter" : m[1];
       return `${m[1]}${m[2]} (${type} ${m[2]} år)`;
-    })
-    .join(" eller ");
+    }),
+    ...andreLag,
+  ].join(", ");
 
-  // Finn kva lag som faktisk har kampar – match på lagkode (t.d. G12, J7)
-  const lagMedKampar = lag.filter((l) => {
+  const lagMedKampar = alderslag.filter((l) => {
     const m = l.match(/\b(G|J|K|M)(\d+)/i);
     if (!m) return false;
     const code = m[0].toUpperCase();
@@ -160,10 +163,10 @@ function buildSystemPrompt(lag, kamper, sider) {
   });
   const kampInstruks =
     lagMedKampar.length === 1
-      ? `Berre ${lagMedKampar[0]} har kampar. Svar direkte om dette laget når nokon spør om kampar eller resultat.`
+      ? `Berre ${lagMedKampar[0]} har kampar i seriesystemet. Svar direkte om dette laget når nokon spør om kampar eller resultat.`
       : lagMedKampar.length > 1
-        ? `Fleire lag har kampar (${lagMedKampar.join(", ")}). Viss nokon spør om kampar utan å spesifisere lag, spør: «Gjeld det ${lagNamn}?»`
-        : `Viss nokon spør om kampar utan å spesifisere lag, spør: «Gjeld det ${lagNamn}?»`;
+        ? `Fleire lag har kampar (${lagMedKampar.join(", ")}). Viss nokon spør om kampar utan å spesifisere lag, spør kva lag det gjeld.`
+        : `Ingen kampar er registrerte enno. Viss nokon spør om kampar, opplys om at kampkalenderen vert oppdatert dagleg.`;
 
   return `Du heiter Ray og er ein hjelpsom assistent for Fiksdal/Rekdal Ballklubb. Du svarar alltid på norsk (nynorsk er fint).
 
@@ -179,10 +182,10 @@ Godkjent som Kvalitetsklubb: 2020
 - E-post: fiksdalrekdalbk2@gmail.com
 - Facebook: https://www.fb.com/p/FiksdalRekdal-Ballklubb-100057307494090/
 
-## Aktive lag
+## Aktive lag denne sesongen
 ${lagListe}
 ${kampInstruks}
-Viss nokon spør om treningar utan å spesifisere lag, spør du: «Gjeld det ${lagNamn}?»
+Viss nokon spør om treningar utan å spesifisere lag, spør du kva lag det gjeld. Merk at Senior 7-ar-lag er eit lågterskelstilbod for alle over 15 år — trening kvar fredag kl. 18:00, ingen krav til nivå.
 
 ## Første styre (1979)
 - Helge Bjerkevoll (leiar), Sigmund Rekdal (kasserar), Knut Bergheim (sekretær)

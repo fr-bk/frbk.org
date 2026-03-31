@@ -400,7 +400,8 @@ export default {
       title: "Lag",
       type: "array",
       group: "structured",
-      description: "Presentasjon av aktive lag i klubben. Vises på sider der du legg til lag.",
+      hidden: ({ document }) => document?.slug?.current !== "vare-lag",
+      description: "Presentasjon av aktive lag i klubben.",
       of: [
         {
           type: "object",
