@@ -2326,7 +2326,6 @@ body.footer-chat-hidden:not(.chat-open) .frbk-chat__toggle {
     color: var(--text);
   }
 }
-
 /* ---------- Lag-kort ---------- */
 .teams-grid {
   display: grid;
