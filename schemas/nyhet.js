@@ -85,6 +85,43 @@ export default {
             },
           ],
         },
+        {
+          type: "object",
+          name: "cta",
+          title: "Knapp / CTA",
+          fields: [
+            {
+              name: "label",
+              title: "Knappetekst",
+              type: "string",
+              validation: (Rule) => Rule.required(),
+            },
+            {
+              name: "href",
+              title: "Lenke",
+              type: "string",
+              description: "T.d. /kontakt/ eller https://medlemskap.nif.no",
+              validation: (Rule) => Rule.required(),
+            },
+            {
+              name: "variant",
+              title: "Stil",
+              type: "string",
+              options: {
+                list: [
+                  { title: "Primær (fylt)", value: "primary" },
+                  { title: "Sekundær (omriss)", value: "secondary" },
+                ],
+                layout: "radio",
+                direction: "horizontal",
+              },
+              initialValue: "primary",
+            },
+          ],
+          preview: {
+            select: { title: "label", subtitle: "href" },
+          },
+        },
       ],
     },
     {

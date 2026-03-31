@@ -3,6 +3,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import { PortableText } from "astro-portabletext";
 import { loadQuery, urlFor } from "../../lib/sanity.js";
 import { nyhetBySlugQuery } from "../../lib/queries.js";
+import CtaBlock from "../../components/CtaBlock.astro";
 
 const { slug } = Astro.params;
 const nyhet = await loadQuery(nyhetBySlugQuery, { slug });
@@ -57,7 +58,11 @@ const articleJsonLd = nyhet ? {
         <h1 class="article-title">{nyhet.title}</h1>
         {nyhet.summary && <p class="article-lead">{nyhet.summary}</p>}
       </header>
-      {nyhet.body && <div class="prose__body prose__body--surface"><PortableText value={nyhet.body} /></div>}
+      {nyhet.body && (
+        <div class="prose__body prose__body--surface">
+          <PortableText value={nyhet.body} components={{ type: { cta: CtaBlock } }} />
+        </div>
+      )}
     </article>
   ) : (
     <article class="prose">

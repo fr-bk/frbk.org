@@ -1,0 +1,12 @@
+---
+const { node } = Astro.props;
+---
+<div class="prose-cta">
+  <a
+    href={node.href}
+    role="button"
+    class={node.variant === "secondary" ? "secondary" : undefined}
+  >
+    {node.label}
+  </a>
+</div>

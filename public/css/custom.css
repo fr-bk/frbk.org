@@ -1452,6 +1452,12 @@ footer.container{
   font-style: italic;
 }
 
+.prose-cta {
+  margin: 2rem 0;
+  display: flex;
+  justify-content: center;
+}
+
 .back-link {
   display: inline-flex;
   align-items: center;
