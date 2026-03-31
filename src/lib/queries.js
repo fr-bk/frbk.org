@@ -66,6 +66,15 @@ export const sideBySlugQuery = `*[_type == "side" && slug.current == $slug][0] {
     description,
     "photoRef": photo
   },
+  teams[] {
+    teamName,
+    season,
+    description,
+    coach,
+    contactEmail,
+    contactPhone,
+    "photoRef": photo
+  },
   "heroImageRef": heroImage,
   heroPosition,
   metaDescription,

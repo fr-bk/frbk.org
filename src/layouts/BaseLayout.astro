@@ -12,6 +12,7 @@ const {
   heroImage = "/img/hero-fotballbane.jpg",
   heroPosition = "center",
   isHome = false,
+  jsonLd = null,
 } = Astro.props;
 
 const [navigationPages, globalConfig] = await Promise.all([
@@ -49,6 +50,28 @@ const cleanHeroPosition = cleanStega(heroPosition);
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:image" content={ogImageUrl} />
     <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- JSON-LD: Organisasjon -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "SportsOrganization",
+      "name": "Fiksdal/Rekdal Ballklubb",
+      "alternateName": "FRBK",
+      "url": "https://frbk.org",
+      "foundingDate": "1979-11-18",
+      "sport": "Association Football",
+      "description": "Fotballglede for alle sidan 1979 – ein inkluderande fotballklubb i Møre og Romsdal.",
+      "address": {
+        "@type": "PostalAddress",
+        "addressRegion": "Møre og Romsdal",
+        "addressCountry": "NO"
+      },
+      "email": "fiksdalrekdalbk2@gmail.com",
+      "sameAs": ["https://www.fb.com/p/FiksdalRekdal-Ballklubb-100057307494090/"]
+    })} />
+
+    <slot name="head" />
+    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
 
     <!-- Unngå flash av feil tema ved sidelasting -->
     <script is:inline>

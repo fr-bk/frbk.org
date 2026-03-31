@@ -3,6 +3,7 @@ import { loadEnv } from "vite";
 import vercel from "@astrojs/vercel";
 import react from "@astrojs/react";
 import sanity from "@sanity/astro";
+import sitemap from "@astrojs/sitemap";
 
 const env = loadEnv(process.env.NODE_ENV ?? "development", process.cwd(), "");
 
@@ -11,6 +12,7 @@ export default defineConfig({
   adapter: vercel({ webAnalytics: { enabled: true } }),
   site: "https://frbk.org",
   integrations: [
+    sitemap(),
     react(),
     sanity({
       projectId: env.PUBLIC_SANITY_PROJECT_ID,

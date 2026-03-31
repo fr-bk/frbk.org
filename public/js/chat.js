@@ -166,6 +166,19 @@
     }
   }
 
+  function safeHref(rawUrl) {
+    // Unescape HTML entities before URL validation
+    var url = rawUrl.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">");
+    try {
+      var parsed = new URL(url);
+      if (parsed.protocol !== "http:" && parsed.protocol !== "https:") return null;
+      // Re-encode quotes to prevent attribute injection
+      return parsed.href.replace(/"/g, "%22").replace(/'/g, "%27");
+    } catch (_) {
+      return null;
+    }
+  }
+
   function renderMarkdown(text) {
     // Escape HTML first to prevent XSS
     var s = text
@@ -178,10 +191,15 @@
     s = s.replace(/\*([^*\n]+?)\*/g, "<em>$1</em>");
     // Headers (## or #) → bold line
     s = s.replace(/^#{1,3}\s+(.+)$/gm, "<strong>$1</strong>");
-    // Links [text](url) — berre http/https
+    // Links [text](url) — berre http/https, validert via safeHref
     s = s.replace(
       /\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g,
-      '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>'
+      function (_, linkText, url) {
+        var href = safeHref(url);
+        return href
+          ? '<a href="' + href + '" target="_blank" rel="noopener noreferrer">' + linkText + "</a>"
+          : linkText;
+      }
     );
     // Newlines → <br>
     s = s.replace(/\n/g, "<br>");

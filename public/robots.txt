@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Ikkje indekser Sanity Studio eller API-endepunkt
+Disallow: /studio/
+Disallow: /api/
+
+Sitemap: https://frbk.org/sitemap-index.xml
