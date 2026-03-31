@@ -5,6 +5,10 @@ const { navigationPages = [], facebookUrl = null } = Astro.props;
 const { pathname } = Astro.url;
 
 const cleanFacebookUrl = facebookUrl ? cleanStega(facebookUrl) : null;
+
+const secondarySlugs = ["styre", "utleie", "dokumenter"];
+const primaryPages = navigationPages.filter(p => !secondarySlugs.includes(cleanStega(p.slug)));
+const secondaryPages = navigationPages.filter(p => secondarySlugs.includes(cleanStega(p.slug)));
 ---
 
 <header class="container">
@@ -21,14 +25,34 @@ const cleanFacebookUrl = facebookUrl ? cleanStega(facebookUrl) : null;
     <ul id="site-nav-links" class="nav-links">
       <li><a href="/" aria-current={pathname === "/" ? "page" : undefined}>Heim</a></li>
       <li><a href="/nyheter/" aria-current={pathname.startsWith("/nyheter") ? "page" : undefined}>Nyheiter</a></li>
-      {navigationPages.map((page) => {
+      {primaryPages.map((page) => {
         const slug = cleanStega(page.slug);
         const label = cleanStega(page.navigationTitle ?? page.title);
-
         return (
           <li><a href={`/${slug}/`} aria-current={pathname === `/${slug}/` ? "page" : undefined}>{label}</a></li>
         );
       })}
+      {secondaryPages.length > 0 && (
+        <li class="nav-dropdown">
+          <button class="nav-dropdown__toggle" aria-expanded="false" aria-haspopup="true">
+            Meir
+            <svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor" aria-hidden="true">
+              <path d="M1.5 5.5l6.5 6 6.5-6" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <ul class="nav-dropdown__menu" role="menu">
+            {secondaryPages.map((page) => {
+              const slug = cleanStega(page.slug);
+              const label = cleanStega(page.navigationTitle ?? page.title);
+              return (
+                <li role="none">
+                  <a href={`/${slug}/`} role="menuitem" aria-current={pathname === `/${slug}/` ? "page" : undefined}>{label}</a>
+                </li>
+              );
+            })}
+          </ul>
+        </li>
+      )}
       {cleanFacebookUrl && (
         <li class="nav-links__facebook">
           <a href={cleanFacebookUrl} target="_blank" rel="noopener noreferrer" aria-label="FRBK på Facebook">

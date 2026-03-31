@@ -82,4 +82,24 @@
 
   window.addEventListener("scroll", updateChatVisibility, { passive: true });
   updateChatVisibility();
+
+  // Dropdown-meny
+  document.querySelectorAll(".nav-dropdown").forEach((dropdown) => {
+    const toggle = dropdown.querySelector(".nav-dropdown__toggle");
+    if (!toggle) return;
+
+    toggle.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const isOpen = dropdown.classList.toggle("is-open");
+      toggle.setAttribute("aria-expanded", String(isOpen));
+    });
+  });
+
+  document.addEventListener("click", () => {
+    document.querySelectorAll(".nav-dropdown.is-open").forEach((d) => {
+      d.classList.remove("is-open");
+      const t = d.querySelector(".nav-dropdown__toggle");
+      if (t) t.setAttribute("aria-expanded", "false");
+    });
+  });
 })();
