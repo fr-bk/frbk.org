@@ -22,6 +22,17 @@ const ogImage = nyhet?.ogImageRef
   : nyhet?.heroImageRef
   ? urlFor(nyhet.heroImageRef).width(1200).height(630).url()
   : null;
+
+const articleJsonLd = nyhet ? {
+  "@context": "https://schema.org",
+  "@type": "NewsArticle",
+  "headline": nyhet.title,
+  "datePublished": nyhet.publishedAt,
+  "url": Astro.url.href,
+  "image": ogImage ?? new URL("/img/hero-fotballbane.jpg", Astro.site ?? "https://frbk.org").href,
+  "author": { "@type": "Organization", "name": "Fiksdal/Rekdal Ballklubb", "url": "https://frbk.org" },
+  "publisher": { "@type": "Organization", "name": "Fiksdal/Rekdal Ballklubb", "url": "https://frbk.org" }
+} : null;
 ---
 
 <BaseLayout
@@ -30,6 +41,7 @@ const ogImage = nyhet?.ogImageRef
   heroPosition={heroPosition}
   description={pageDescription}
   ogImage={ogImage}
+  jsonLd={articleJsonLd}
 >
   {nyhet ? (
     <article class="prose">

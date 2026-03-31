@@ -10,7 +10,7 @@ Nettside for Fiksdal/Rekdal ballklubb — stifta 1979, Møre og Romsdal.
 | CMS | Sanity v3 — prosjekt `330w38cx`, dataset `production` |
 | Hosting | Vercel (Hobby) — `main` → frbk.org |
 | CSS | Pico CSS v2 (CDN) + `public/css/custom.css` |
-| Chat | Claude API (`claude-sonnet-4-6`) — assistent heiter Ray |
+| Chat | Claude API (`claude-haiku-4-5-20251001`) — assistent heiter Ray |
 | Kampar | Henta dagleg frå fotball.no via GitHub Actions → `data/kamper.json` |
 
 ## Kom i gang

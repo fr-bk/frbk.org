@@ -359,6 +359,81 @@ export default {
       ],
     },
     {
+      name: "teams",
+      title: "Lag",
+      type: "array",
+      group: "structured",
+      description: "Presentasjon av aktive lag i klubben. Vises på sider der du legg til lag.",
+      of: [
+        {
+          type: "object",
+          fields: [
+            {
+              name: "teamName",
+              title: "Lagnamn",
+              type: "string",
+              validation: (Rule) => Rule.required(),
+            },
+            {
+              name: "season",
+              title: "Sesong",
+              type: "string",
+              description: "T.d. 2025/2026",
+            },
+            {
+              name: "description",
+              title: "Beskriving",
+              type: "text",
+              rows: 3,
+            },
+            {
+              name: "coach",
+              title: "Trenar",
+              type: "string",
+            },
+            {
+              name: "contactEmail",
+              title: "Kontakt-e-post",
+              type: "string",
+            },
+            {
+              name: "contactPhone",
+              title: "Kontakttelefon",
+              type: "string",
+            },
+            {
+              name: "photo",
+              title: "Lagbilete",
+              type: "image",
+              options: { hotspot: true },
+              fields: [
+                {
+                  name: "alt",
+                  title: "Alt-tekst",
+                  type: "string",
+                  description: "Beskriv kva som er på biletet.",
+                  validation: (Rule) =>
+                    Rule.required().warning("Hugs alt-tekst på lagbilete"),
+                },
+              ],
+            },
+          ],
+          preview: {
+            select: {
+              title: "teamName",
+              subtitle: "season",
+            },
+            prepare({ title, subtitle }) {
+              return {
+                title,
+                subtitle: subtitle || "Sesong ikkje angitt",
+              };
+            },
+          },
+        },
+      ],
+    },
+    {
       name: "milestones",
       title: "Utmerkingar",
       type: "array",

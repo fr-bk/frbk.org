@@ -70,13 +70,15 @@ const clubFacts = side?.clubFacts ?? [];
 const milestones = side?.milestones ?? [];
 const notablePlayers = side?.notablePlayers ?? [];
 const boardMembers = side?.boardMembers ?? [];
+const teams = side?.teams ?? [];
 const displayedClubFacts =
   slug === "om-klubben"
     ? clubFacts.filter((fact) => fact?.label !== "Tilbod").slice(0, 3)
     : clubFacts;
 const hasStructuredSections =
   contactCards.length > 0 || documents.length > 0 || clubFacts.length > 0 ||
-  milestones.length > 0 || notablePlayers.length > 0 || boardMembers.length > 0;
+  milestones.length > 0 || notablePlayers.length > 0 || boardMembers.length > 0 ||
+  teams.length > 0;
 const shouldRenderHighlights = enhancement.highlights.length > 0 && !hasStructuredSections;
 const shouldRenderBody =
   side?.body?.length > 0 && !(slug === "kontakt" && contactCards.length > 0);
@@ -234,6 +236,57 @@ const sanitizePhoneHref = (value = "") => value.replace(/[^\d+]/g, "");
                     </div>
                     {player.clubs && <p class="player-card__clubs">{player.clubs}</p>}
                     {player.description && <p class="player-card__desc">{player.description}</p>}
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {teams.length > 0 && (
+          <section class="info-section info-section--teams" aria-labelledby="teams-title">
+            <div class="section-intro">
+              <div class="section-intro__eyebrow">Aktive lag</div>
+              <h2 id="teams-title">Lag i klubben</h2>
+            </div>
+            <div class="teams-grid">
+              {teams.map((team) => (
+                <article class="team-card">
+                  {team.photoRef && (
+                    <div class="team-card__photo">
+                      <img
+                        src={urlFor(team.photoRef).width(640).height(360).fit("crop").url()}
+                        alt={team.photoRef.alt ?? team.teamName}
+                        width="640"
+                        height="360"
+                        loading="lazy"
+                      />
+                    </div>
+                  )}
+                  <div class="team-card__body">
+                    <h3>{team.teamName}</h3>
+                    {team.season && <div class="team-card__season">{team.season}</div>}
+                    {team.description && <p>{team.description}</p>}
+                    <div class="team-card__meta">
+                      {team.coach && (
+                        <div class="team-card__meta-item">
+                          <span class="team-card__meta-label">Trenar</span>
+                          <span>{team.coach}</span>
+                        </div>
+                      )}
+                      {team.contactPhone && (
+                        <div class="team-card__meta-item">
+                          <span class="team-card__meta-label">Telefon</span>
+                          <a href={`tel:${sanitizePhoneHref(team.contactPhone)}`}>{team.contactPhone}</a>
+                        </div>
+                      )}
+                      {team.contactEmail && (
+                        <div class="team-card__meta-item">
+                          <span class="team-card__meta-label">E-post</span>
+                          <a href={`mailto:${team.contactEmail}`}>{team.contactEmail}</a>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </article>
               ))}
