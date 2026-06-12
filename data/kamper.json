@@ -1,79 +1,72 @@
 [
   {
-    "end": "2026-06-09T19:02:00",
-    "start": "2026-06-09T18:00:00",
-    "location": "Fiksdal kunstgress",
-    "title": "Fiksdal/Rekdal G12 BK - Molde G12 3 -",
-    "uid": "757618cd-d5c1-4d35-855c-2365282e7d33"
-  },
-  {
     "end": "2026-06-12T20:05:00",
     "start": "2026-06-12T19:00:00",
     "location": "Vågen Arena",
     "title": "Vågstranda Menn 7er 1 - Fiksdal/Rekdal -",
-    "uid": "52bd7522-7a8e-4f01-9e1b-71672794b27c"
+    "uid": "9c0874c7-951f-4085-bc30-fb00ad4db7f8"
   },
   {
     "end": "2026-06-16T19:02:00",
     "start": "2026-06-16T18:00:00",
     "location": "Cecilienfryd kunstgress 7er A",
     "title": "Træff G12 2 - Fiksdal/Rekdal G12 BK -",
-    "uid": "47dce5ae-e509-4c6b-822e-d42007d2e8fc"
+    "uid": "5ee25e62-d2d5-454f-9d6a-a384d5b320ff"
   },
   {
     "end": "2026-06-16T20:05:00",
     "start": "2026-06-16T19:00:00",
     "location": "Fiksdal kunstgress",
     "title": "Fiksdal/Rekdal - Malmefjorden  -",
-    "uid": "cbcbfe07-d5b3-43b0-9afb-e44d92c087e0"
+    "uid": "cdba50f8-0e50-4500-9f1b-eb3d4d6fb96d"
   },
   {
     "end": "2026-08-26T20:05:00",
     "start": "2026-08-26T19:00:00",
     "location": "Råkhaugen kunstgress",
     "title": "Molde Menn 7er 1 - Fiksdal/Rekdal -",
-    "uid": "784945ff-082d-43ae-be59-7fa2139e0611"
+    "uid": "7759d307-7c26-432e-87a6-eb027f00b80b"
   },
   {
     "end": "2026-09-01T20:05:00",
     "start": "2026-09-01T19:00:00",
     "location": "Fiksdal kunstgress",
     "title": "Fiksdal/Rekdal - Batnfjord  Menn 7er 1 -",
-    "uid": "15ccfec2-2bdc-4a85-8bc0-d7e532c34f66"
+    "uid": "4d9e4d32-6ecc-4e7f-b333-b56dbc288eb3"
   },
   {
     "end": "2026-09-08T20:05:00",
     "start": "2026-09-08T19:00:00",
     "location": "Eresfjord stadion 7er A",
     "title": "Eresfjord/Vistdal Menn 7er 1 - Fiksdal/Rekdal -",
-    "uid": "9a6fd7d7-58f5-4cfb-a188-5fce48bae16d"
+    "uid": "a828a3b8-57d8-47ee-9f2a-956e4ae58a2b"
   },
   {
     "end": "2026-09-15T20:05:00",
     "start": "2026-09-15T19:00:00",
     "location": "Råkhaugen kunstgress",
     "title": "Nordbyen Sportsklubb Menn 7er 1 - Fiksdal/Rekdal -",
-    "uid": "b88e8f5c-5b5a-455f-b419-1a16c093182d"
+    "uid": "1f26253b-2daa-4dd5-9d20-b5e46ca549a5"
   },
   {
     "end": "2026-09-19T15:05:00",
     "start": "2026-09-19T14:00:00",
     "location": "Fiksdal kunstgress",
     "title": "Fiksdal/Rekdal - Nordbyen Sportsklubb Menn 7er 1 -",
-    "uid": "7f34ef65-edb7-41f0-8f12-615c11d1ac59"
+    "uid": "32a37f87-b381-4969-abbc-300e88ae2dc4"
   },
   {
     "end": "2026-09-26T15:05:00",
     "start": "2026-09-26T14:00:00",
     "location": "Straumsnes stadion 7er A",
     "title": "Straumsnes Menn 7er 1 - Fiksdal/Rekdal -",
-    "uid": "d9a84dd5-c069-46be-836f-9fe2c9e1bbf6"
+    "uid": "b10052e6-55f9-4b4e-a205-d33ace26b6d6"
   },
   {
     "end": "2026-10-03T17:05:00",
     "start": "2026-10-03T16:00:00",
     "location": "Fiksdal kunstgress",
     "title": "Fiksdal/Rekdal - Vågstranda Menn 7er 1 -",
-    "uid": "558e2310-861d-442c-8831-3248bfa158d3"
+    "uid": "6a7df434-62e3-449d-b01e-8fa4fff0f395"
   }
 ]
