@@ -1,37 +1,30 @@
 [
   {
-    "end": "2026-09-21T19:02:00",
-    "start": "2026-09-21T18:00:00",
-    "location": "Fiksdal kunstgress",
-    "title": "Fiksdal/Rekdal G12 BK - Rival  G12 2 -",
-    "uid": "1b4a3435-75ea-41f8-b560-9f303e463bf5"
-  },
-  {
     "end": "2026-09-26T15:05:00",
     "start": "2026-09-26T14:00:00",
     "location": "Straumsnes stadion 7er A",
     "title": "Straumsnes Menn 7er 1 - Fiksdal/Rekdal -",
-    "uid": "fe4f880b-a5d4-495c-927b-7e2bdbd2babc"
+    "uid": "d59b4884-8907-45f5-9d68-0a97008684de"
   },
   {
     "end": "2026-09-28T20:02:00",
     "start": "2026-09-28T19:00:00",
     "location": "Råkhaugen kunstgress",
     "title": "Molde G12 3 - Fiksdal/Rekdal G12 BK -",
-    "uid": "1f836c22-5dab-459d-8765-5ea8161cab65"
+    "uid": "3832c5d0-92a0-4855-b62b-ba06aa2337b9"
   },
   {
     "end": "2026-10-03T17:05:00",
     "start": "2026-10-03T16:00:00",
     "location": "Fiksdal kunstgress",
     "title": "Fiksdal/Rekdal - Vågstranda Menn 7er 1 -",
-    "uid": "1944efd8-3d1f-4907-9989-3158b749397a"
+    "uid": "2c3ebc27-0239-48cc-8350-3e1ad843b6db"
   },
   {
     "end": "2026-10-05T19:02:00",
     "start": "2026-10-05T18:00:00",
     "location": "Fiksdal kunstgress",
     "title": "Fiksdal/Rekdal G12 BK - Træff G12 2 -",
-    "uid": "4bc4580f-1d50-4e0f-8dd7-6242726878e4"
+    "uid": "2ddeb1d8-fc47-4b47-9fc0-0bd97632d334"
   }
 ]
