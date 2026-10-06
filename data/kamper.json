@@ -1,23 +1,16 @@
 [
   {
-    "end": "2026-10-03T17:05:00",
-    "start": "2026-10-03T16:00:00",
-    "location": "Fiksdal kunstgress",
-    "title": "Fiksdal/Rekdal - Vågstranda Menn 7er 1 1 - 2",
-    "uid": "7e2a81e7-b29c-4599-9f93-3994de2eb58d"
-  },
-  {
     "end": "2026-10-05T19:02:00",
     "start": "2026-10-05T18:00:00",
     "location": "Fiksdal kunstgress",
     "title": "Fiksdal/Rekdal G12 BK - Træff G12 2 -",
-    "uid": "a8d43ef5-e92f-4fef-a122-d53f6446f0e1"
+    "uid": "ddd06d94-a742-464c-aa91-cbcb17aae910"
   },
   {
     "end": "2026-10-08T19:02:00",
     "start": "2026-10-08T18:00:00",
     "location": "Råkhaugen kunstgress",
     "title": "Molde G12 3 - Fiksdal/Rekdal G12 BK -",
-    "uid": "d1360d4f-ef55-4377-8968-93bf206b5ee8"
+    "uid": "da987814-a5a6-4639-a590-27ccaebec031"
   }
 ]
